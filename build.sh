@@ -114,7 +114,6 @@ fi
 logfiletime=$(date '+%Y-%m-%d_%H-%M-%S')
 logfilename="${logfiletime}_${shdir}_${device}"
 starttime=$(date '+%Y/%m/%d %T')
-starttwit="$device 向け $source のビルドを開始します。\n$starttime"
 logfolder="log"
 zipfolder="zip"
 source=$shdir
@@ -124,16 +123,18 @@ if [ "$zipname" = "" ]; then
         zipname="*"
 fi
 
-# 設定情報を取得
-(ls ../config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
-        . ../config.sh
-fi
-
 ## ソースフォルダ内設定情報を取得
 (ls ./config.sh) >& /dev/null
 if [ $? -eq 0 ]; then
         . ./config.sh
+fi
+
+starttwit="$device 向け $source のビルドを開始します。\n$starttime"
+
+# 設定情報を取得
+(ls ../config.sh) >& /dev/null
+if [ $? -eq 0 ]; then
+        . ../config.sh
 fi
 
 # 事前フォルダ作成
