@@ -87,6 +87,7 @@ if [ "$screen" != "enable" ]; then
            outcr $red "デバイスが存在しません。文字列が間違っていないか確認してください。" 1>&2
            usage_exit
         fi
+        cd ..
         screen $0 "$@" -x
         exit 0
 fi
@@ -141,12 +142,12 @@ mkdir -p ../$zipfolder
 
 ## ビルド開始ツイート処理
 if [ "$tweet" = "-t" ]; then
-        # echo文がそのまま出力されます。この文を編集することで開始時のツイートが変更できます。
         echo -e $starttwit | python ../tweet.py
 fi
 
 ## ビルド実行
 outcr $blue "指定されたコマンドを実行します。"
+LANG=C
 brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 
 ## ビルド後処理
