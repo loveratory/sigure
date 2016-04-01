@@ -161,7 +161,7 @@ fi
 
 ### ファイル移動
 if [ $res -eq 1 ]; then
-        mv out/out/target/product/${device}/${zipname}.zip ../${zipfolder}
+        mv out/target/product/${device}/${zipname}.zip ../${zipfolder}
 fi
 cd ..
 
