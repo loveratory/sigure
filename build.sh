@@ -96,14 +96,61 @@ fi
 ## ビルドフォルダへの移動
 cd $shdir
 
+## 事前設定
+source=$shdir
+
+## ソースフォルダ内設定情報を取得
+(ls ./config.sh) >& /dev/null
+if [ $? -eq 0 ]; then
+        . ./config.sh
+fi
+
 ## build/envsetup.shの読み込み
 source build/envsetup.sh >& /dev/null
 
+# 事前フォルダ作成
+mkdir -p ../$logfolder
+mkdir -p ../$zipfolder
+
 ## repo syncを行うか確認
 if [ "$optrs" = "-s" ]; then
+	## デフォルト値セット
+	startsynctime=$(date '+%Y/%m/%d %T')
+	startsync="$source の repo sync を開始します。\n$startsynctime"
+	
+	# 設定情報を取得
+	(ls ../config.sh) >& /dev/null
+	if [ $? -eq 0 ]; then
+	        . ../config.sh
+	fi
+	
         outcr $blue "repo syncを開始します。"
+	if [ "$tweet" = "-t" ]; then
+		echo -e $startsync | python ../tweet.py
+	fi
         repo sync -j4 --force-sync
+
+	if [ "$tweet" = "-t" ]; then
+	        if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
+			endsynctime=$(date '+%Y/%m/%d %T')
+			endsync="$source の repo sync が正常終了しました。\n$endsynctime"
+		        (ls ../config.sh) >& /dev/null
+			if [ $? -eq 0 ]; then
+	 	        	. ../config.sh
+        		fi
+                	echo -e $endsync | python ../tweet.py
+        	else
+			endsynctime=$(date '+%Y/%m/%d %T')
+			stopsync="$source の repo sync が異常終了しました。\n$endsynctime"
+                	(ls ../config.sh) >& /dev/null
+                	if [ $? -eq 0 ]; then
+                        	. ../config.sh
+                	fi
+                	echo -e $stopsync | python ../tweet.py
+        	fi
+	fi
 fi
+
 ## make cleanを行うか確認
 if [ "$optmc" = "-c" ]; then
         outcr $blue "make cleanを開始します。"
@@ -116,12 +163,12 @@ logfilename="${logfiletime}_${shdir}_${device}"
 starttime=$(date '+%Y/%m/%d %T')
 logfolder="log"
 zipfolder="zip"
-source=$shdir
 zipdate=$(date -u '+%Y%m%d')
 zipname=$(get_build_var CM_VERSION)
 if [ "$zipname" = "" ]; then
         zipname="*"
 fi
+starttwit="$device 向け $source のビルドを開始します。\n$starttime"
 
 ## ソースフォルダ内設定情報を取得
 (ls ./config.sh) >& /dev/null
@@ -129,17 +176,11 @@ if [ $? -eq 0 ]; then
         . ./config.sh
 fi
 
-starttwit="$device 向け $source のビルドを開始します。\n$starttime"
-
-# 設定情報を取得
+## 設定情報を取得
 (ls ../config.sh) >& /dev/null
 if [ $? -eq 0 ]; then
         . ../config.sh
 fi
-
-# 事前フォルダ作成
-mkdir -p ../$logfolder
-mkdir -p ../$zipfolder
 
 ## ビルド開始ツイート処理
 if [ "$tweet" = "-t" ]; then
@@ -151,7 +192,7 @@ outcr $blue "指定されたコマンドを実行します。"
 LANG=C
 brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 
-## ビルド後処理
+
 ### ビルドが成功したか確認します。
 if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
         res=1
