@@ -202,7 +202,7 @@ fi
 
 ### ファイル移動
 if [ $res -eq 1 ]; then
-        mv out/target/product/${device}/${zipname}.zip ../${zipfolder}
+        mv --backup=t out/target/product/${device}/${zipname}.zip ../${zipfolder}
 fi
 cd ..
 
