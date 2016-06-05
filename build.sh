@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # デフォルト値セット
+unset make
 screen="disable"
 thread=4
 
@@ -28,18 +29,19 @@ fi
 
 # 異常時の終了処理及びヘルプ表示
 usage_exit(){
-        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread]" 1>&2
+        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread] [-m]" 1>&2
         echo -e "-r: brunchビルドを実行するデバイスネームを指定" 1>&2
         echo -e "-d: コマンドを実行するディレクトリを現在位置からの相対パスか絶対パスで指定" 1>&2
         echo -e "-c: make cleanを行う(オプション)" 1>&2
         echo -e "-s: repo syncを行うか(オプション)" 1>&2
         echo -e "-t: ツイートを行うか(オプション)" 1>&2
-	echo -e "-j: スレッド数指定(オプション)" 1>&2
+	echo -e "-j: repo sync及び-mオプション時のmakeのスレッド数指定(オプション)" 1>&2
+	echo -e "-m: brunchではなくmakeで実行する(オプション)" 1>&2
         exit 1
 }
 
 # 引数処理
-while getopts d:r:j:cstx var
+while getopts d:r:j:cstmx var
 do
     case $var in
         d) shdir=$OPTARG
@@ -54,6 +56,7 @@ do
         s) optrs="-s" ;;
         t) tweet="-t" ;;
 	j) thread=$OPTARG ;;
+	m) make="enable" ;;
         x) screen="enable" ;;
     esac
 done
@@ -191,7 +194,11 @@ fi
 ## ビルド実行
 outcr $blue "指定されたコマンドを実行します。"
 LANG=C
-make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
+if [ "$make" = "enable" ]; then
+	make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
+else
+	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
+fi
 
 
 ### ビルドが成功したか確認します。
