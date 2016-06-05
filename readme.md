@@ -35,7 +35,9 @@ Pushbullet API、MEGA Toolsに対応しており、多機能です。またツ�
 ## 設定について
 #### tweet.py
 tweet.py内のCK,CS,AT,ASに適宜取得したAPIキーを入れておくこと。
+
 #### 実行フォルダ内のconfig.sh
+
 ```
 starttwit="開始時ツイート内容"
 stoptwit="失敗時ツイート内容"
@@ -45,11 +47,23 @@ endziptwit="zip名が指定されている場合の成功時ツイート内容"
 
 規定値
 - starttime: `$(date '+%Y/%m/%d %T')`  
-  `2016/03/29 14:00:08`  
+
+  ```
+  2016/03/29 14:00:08
+  ```
+
 - endtime: `$(date '+%Y/%m/%d %T')`  
-  `2016/03/29 13:32:31`
+
+  ```
+  2016/03/29 13:32:31
+  ```
+
 - endstr: `$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)/)/g' | sed 's/ (mm:ss)/)/g' | sed 's/ seconds)/s)/g'`  
-  `make failed to build some targets (05:22)`
+
+  ```
+  make failed to build some targets (05:22)
+  ```
+
 - starttwit: `$device 向け $source のビルドを開始します。\n$starttime`
 
   ```
@@ -84,9 +98,11 @@ endziptwit="zip名が指定されている場合の成功時ツイート内容"
 - zipname: ソースフォルダ内のconfig.shの欄を参照
   
 - logfilename: `${logfiletime}\_${shdir}\_${device}`  
+
   ```
   2016-03-29_14-00-08_RRMM_thor
   ```
+
 - logfolder: `log`
 - zipfolder: `zip`
 
@@ -119,9 +135,16 @@ zipname="zip名"
   BlissPopではBliss_VERSIONで取得できたが、個々のROM毎に違う場合があるので適宜調べてconfig.shに記載すること。取得できない場合endziptwitは行われない。
 
 - zipdate: `$(date -u '+%Y%m%d')`  
-  `20160329`
+
+  ```
+  20160329
+  ```
+
 - device: -rオプションの引数が代入される  
- `huashan`
+
+  ```
+  huashan
+  ```
 
 Example:
 ```
