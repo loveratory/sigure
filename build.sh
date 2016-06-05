@@ -1,14 +1,8 @@
 #!/bin/bash
 
-# 変数リセット/デフォルト値セット
-unset check
-unset shdir
-unset com
-unset tweet
-unset optmc
-unset optrs
-unset comm
+# デフォルト値セット
 screen="disable"
+thread=4
 
 # 色表示部
 red=31
@@ -34,17 +28,18 @@ fi
 
 # 異常時の終了処理及びヘルプ表示
 usage_exit(){
-        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t]" 1>&2
-        echo -e " -r: brunchビルドを実行するデバイスネームを指定" 1>&2
+        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread]" 1>&2
+        echo -e "-r: brunchビルドを実行するデバイスネームを指定" 1>&2
         echo -e "-d: コマンドを実行するディレクトリを現在位置からの相対パスか絶対パスで指定" 1>&2
         echo -e "-c: make cleanを行う(オプション)" 1>&2
         echo -e "-s: repo syncを行うか(オプション)" 1>&2
         echo -e "-t: ツイートを行うか(オプション)" 1>&2
+	echo -e "-j: スレッド数指定(オプション)" 1>&2
         exit 1
 }
 
 # 引数処理
-while getopts d:r:cstx var
+while getopts d:r:j:cstx var
 do
     case $var in
         d) shdir=$OPTARG
@@ -58,6 +53,7 @@ do
         c) optmc="-c" ;;
         s) optrs="-s" ;;
         t) tweet="-t" ;;
+	j) thread=$OPTARG ;;
         x) screen="enable" ;;
     esac
 done
@@ -70,9 +66,8 @@ if [ "$device" = "" ]; then
         outcr $red "デバイスが指定されていません。指定してください。" 1>&2
         check="true"
 fi
-
 if [ "$check" = "true" ]; then
-   usage_exit
+	usage_exit
 fi
 
 # screenで起動しているか確認
@@ -98,24 +93,31 @@ cd $shdir
 
 ## 事前設定
 source=$shdir
+logfolder="log"
+zipfolder="zip"
 
-## ソースフォルダ内設定情報を取得
+## 設定情報を取得
 (ls ./config.sh) >& /dev/null
 if [ $? -eq 0 ]; then
         . ./config.sh
 fi
-
-## build/envsetup.shの読み込み
-source build/envsetup.sh >& /dev/null
+(ls ../config.sh) >& /dev/null
+if [ $? -eq 0 ]; then
+        . ../config.sh
+fi
 
 # 事前フォルダ作成
 mkdir -p ../$logfolder
 mkdir -p ../$zipfolder
 
+## build/envsetup.shの読み込み
+source build/envsetup.sh >& /dev/null
+
+
 ## repo syncを行うか確認
 if [ "$optrs" = "-s" ]; then
 	## デフォルト値セット
-	startsynctime=$(date '+%Y/%m/%d %T')
+	startsynctime=$(date '+%m/%d %H:%M:%S')
 	startsync="$source の repo sync を開始します。\n$startsynctime"
 	
 	# 設定情報を取得
@@ -128,26 +130,27 @@ if [ "$optrs" = "-s" ]; then
 	if [ "$tweet" = "-t" ]; then
 		echo -e $startsync | python ../tweet.py
 	fi
-        repo sync -j4 --force-sync
+
+        repo sync -j$thread --force-sync
 
 	if [ "$tweet" = "-t" ]; then
 	        if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
-			endsynctime=$(date '+%Y/%m/%d %T')
-			endsync="$source の repo sync が正常終了しました。\n$endsynctime"
-		        (ls ../config.sh) >& /dev/null
-			if [ $? -eq 0 ]; then
-	 	        	. ../config.sh
-        		fi
-                	echo -e $endsync | python ../tweet.py
+			res=0
         	else
-			endsynctime=$(date '+%Y/%m/%d %T')
-			stopsync="$source の repo sync が異常終了しました。\n$endsynctime"
-                	(ls ../config.sh) >& /dev/null
-                	if [ $? -eq 0 ]; then
-                        	. ../config.sh
-                	fi
-                	echo -e $stopsync | python ../tweet.py
+			res=1
         	fi
+		endtime=$(date '+%m/%d %H:%M:%S')
+		endsync="$source の repo sync が正常終了しました。\n$endtime"
+		stopsync="$source の repo sync が異常終了しました。\n$endtime"
+		(ls ../config.sh) >& /dev/null
+		if [ $? -eq 0 ]; then
+			. ../config.sh
+		fi
+		if [ $res -eq 0 ]; then
+			echo -e $endsync | python ../tweet.py
+		else
+			echo -e $stopsync | python ../tweet.py
+		fi
 	fi
 fi
 
@@ -160,9 +163,7 @@ fi
 ## 設定情報取得前設定
 logfiletime=$(date '+%Y-%m-%d_%H-%M-%S')
 logfilename="${logfiletime}_${shdir}_${device}"
-starttime=$(date '+%Y/%m/%d %T')
-logfolder="log"
-zipfolder="zip"
+starttime=$(date '+%m/%d %H:%M:%S')
 zipdate=$(date -u '+%Y%m%d')
 zipname=$(get_build_var CM_VERSION)
 if [ "$zipname" = "" ]; then
@@ -190,7 +191,7 @@ fi
 ## ビルド実行
 outcr $blue "指定されたコマンドを実行します。"
 LANG=C
-brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
+make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
 
 
 ### ビルドが成功したか確認します。
@@ -207,8 +208,9 @@ fi
 cd ..
 
 ### 設定情報取得前設定
-endstr=$(cat -v "$logfolder/$logfilename.log" | tail -n 3 | tr -d '\n' | cut -d "#" -f 5-5 | cut -c 2-)
-endtime=$(date '+%Y/%m/%d %H:%M:%S')
+unset endstr
+endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/(hh:mm:ss)//g' | sed 's/(mm:ss)//g' | sed 's/ )/)/g')
+endtime=$(date '+%m/%d %H:%M:%S')
 stoptwit="$device 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
 endtwit="$device 向け $source のビルドが成功しました!\n$endstr\n$endtime"
 endziptwit="$zipname のビルドに成功しました!\n$endstr\n$endtime"
