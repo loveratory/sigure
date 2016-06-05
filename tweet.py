@@ -16,9 +16,6 @@ url = "https://api.twitter.com/1.1/statuses/update.json"
 # ツイートする文字列の取得
 input = sys.stdin.read()
 
-# ツイートする文字列の確認
-print input
-
 # ツイート本文
 params = {"status": input}
 
