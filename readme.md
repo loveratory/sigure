@@ -48,7 +48,7 @@ endziptwit="zip名が指定されている場合の成功時ツイート内容"
   `2016/03/29 14:00:08`  
 - endtime: `$(date '+%Y/%m/%d %T')`  
   `2016/03/29 13:32:31`
-- endstr: `$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)/)/g' | sed 's/ (mm:ss)/)/g' | sed 's/ seconds)/s)/g'`
+- endstr: `$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)/)/g' | sed 's/ (mm:ss)/)/g' | sed 's/ seconds)/s)/g'`  
   `make failed to build some targets (05:22)`
 - starttwit: `$device 向け $source のビルドを開始します。\n$starttime`
 
@@ -118,7 +118,8 @@ zipname="zip名"
     
   BlissPopではBliss_VERSIONで取得できたが、個々のROM毎に違う場合があるので適宜調べてconfig.shに記載すること。取得できない場合endziptwitは行われない。
 
-- zipdate: `$(date -u '+%Y%m%d')`
+- zipdate: `$(date -u '+%Y%m%d')`  
+  `20160329`
 - device: -rオプションの引数が代入される  
  `huashan`
 
