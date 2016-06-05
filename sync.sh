@@ -101,9 +101,9 @@ fi
 
 # repo sync 後ツイート
 if [ $tweet ]; then
-	endtime=$(date '+%m/%d %H:%M:%S')
-	endsync="$source の repo sync が正常終了しました。\n$endtime"
-	stopsync="$source の repo sync が異常終了しました。\n$endtime"
+	endsynctime=$(date '+%m/%d %H:%M:%S')
+	endsync="$source の repo sync が正常終了しました。\n$endsynctime"
+	stopsync="$source の repo sync が異常終了しました。\n$endsynctime"
 	(ls ../config.sh) >& /dev/null
 	if [ $? -eq 0 ]; then
 		. ../config.sh
