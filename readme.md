@@ -16,8 +16,10 @@
  
 ## 導入
 ```
+cd ~/
 wget https://raw.githubusercontent.com/otofune/sigure/master/build.sh
 wget https://raw.githubusercontent.com/otofune/sigure/master/tweet.py
+chmod 755 build.sh
 ```
 bashがインストールされている必要があります。  
 screenというソフトウエアを利用します。  
