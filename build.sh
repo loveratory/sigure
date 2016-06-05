@@ -192,11 +192,12 @@ if [ "$tweet" = "-t" ]; then
 fi
 
 ## ビルド実行
-outcr $blue "指定されたコマンドを実行します。"
 LANG=C
 if [ "$make" = "enable" ]; then
+	outcr $blue "ビルドをmakeで開始します。"
 	make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
 else
+	outcr $blue "ビルドをbrunchで開始します。"
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 fi
 
