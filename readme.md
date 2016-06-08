@@ -40,13 +40,6 @@ tweet.py内のCK,CS,AT,ASに適宜取得したAPIキーを入れておくこと�
 
 #### 実行ディレクトリ内のconfig.sh
 
-```
-starttwit="開始時ツイート内容"
-stoptwit="失敗時ツイート内容"
-endtwit="zip名が指定されてない場合の成功時ツイート内容"
-endziptwit="zip名が指定されている場合の成功時ツイート内容"
-```
-
 規定値
 - starttime: `$(date '+%Y/%m/%d %T')`  
 
@@ -108,16 +101,6 @@ endziptwit="zip名が指定されている場合の成功時ツイート内容"
 - logfolder: `log`
 - zipfolder: `zip`
 
-Example:
-```
-# config.sh
-starttwit="$device 向け $source のビルドを開始します。\n$starttime #sigurebuild"
-stoptwit="$device 向け $source のビルドが失敗しました。\n$endstr\n$endtime #sigurebuild"
-endtwit="$device 向け $source のビルドが成功しました!\n$endstr\n$endtime #sigurebuild"
-endziptwit="$zipname のビルドに成功しました!\n$endstr\n$endtime #sigurebuild"
-log="log"
-zip="zip"
-```
 
 #### ソースディレクトリ内のconfig.sh
 ```
@@ -127,14 +110,18 @@ zipname="zip名"
 
 規定値
 - source: -dオプションで指定されたディレクトリ名  
-  `CM13.0`
-- zipname: `$(get_build_var CM_VERSION)`  
+
+  ```
+  CM13.0
+  ```
+
+- getvar: `$(get_build_var CM_VERSION)`
 
   ```
   ResurrectionRemix-M-v5.6.5-20160329-spyder
   ```  
-    
-  BlissPopではBliss_VERSIONで取得できたが、個々のROM毎に違う場合があるので適宜調べてconfig.shに記載すること。取得できない場合endziptwitは行われない。
+
+- zipname: `$getvar`  
 
 - zipdate: `$(date -u '+%Y%m%d')`  
 
@@ -147,10 +134,3 @@ zipname="zip名"
   ```
   huashan
   ```
-
-Example:
-```
-# config.sh
-source="CyanogenMod 13.0"
-zipname="cm-13.0-${zipdate}-UNOFFICIAL-${device}"
-```
