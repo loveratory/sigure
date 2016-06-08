@@ -35,8 +35,12 @@ pip install requests_oauthlib
 Pushbullet API、MEGA Toolsに対応しており、多機能です。またツイート機能がoysttyer依存です。そちらもどうぞ。
 
 ## 設定について
-#### tweet.py
+### tweet.py
 tweet.py内のCK,CS,AT,ASに適宜取得したAPIキーを入れておくこと。
+
+### config.sh
+[sample](https://github.com/otofune/sigure/tree/master/sample)  
+を参考に以下の規定値を活かして適宜改変すること。
 
 #### 実行ディレクトリ内のconfig.sh
 
@@ -103,10 +107,6 @@ tweet.py内のCK,CS,AT,ASに適宜取得したAPIキーを入れておくこと�
 
 
 #### ソースディレクトリ内のconfig.sh
-```
-source="ツイート時ROM名"
-zipname="zip名"
-```
 
 規定値
 - source: -dオプションで指定されたディレクトリ名  
