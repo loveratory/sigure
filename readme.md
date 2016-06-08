@@ -2,7 +2,7 @@
 ## まずはじめに
 パブリックドメインとします。ぐちゃぐちゃなのは許して
 ## 仕様
-ビルドしたいソースフォルダの一個上のディレクトリに配置してください。  
+ビルドしたいソースディレクトリの一個上のディレクトリに配置してください。  
 ```
 使用法: ./build.sh [-d dir] [-r device] [-c] [-s] [-t] [-j thread] [-m]
 -r: brunchビルドを実行するデバイスネームを指定
@@ -38,7 +38,7 @@ Pushbullet API、MEGA Toolsに対応しており、多機能です。またツ�
 #### tweet.py
 tweet.py内のCK,CS,AT,ASに適宜取得したAPIキーを入れておくこと。
 
-#### 実行フォルダ内のconfig.sh
+#### 実行ディレクトリ内のconfig.sh
 
 ```
 starttwit="開始時ツイート内容"
@@ -97,7 +97,7 @@ endziptwit="zip名が指定されている場合の成功時ツイート内容"
   2016/03/29 12:43:53
   ```
 
-- zipname: ソースフォルダ内のconfig.shの欄を参照
+- zipname: ソースディレクトリ内のconfig.shの欄を参照
   
 - logfilename: `${logfiletime}\_${shdir}\_${device}`  
 
@@ -119,7 +119,7 @@ log="log"
 zip="zip"
 ```
 
-#### ソースフォルダ内のconfig.sh
+#### ソースディレクトリ内のconfig.sh
 ```
 source="ツイート時ROM名"
 zipname="zip名"

@@ -63,7 +63,7 @@ if [ ! $screen ]; then
 	exit 0
 fi
 
-# 実行フォルダの移動
+# 実行ディレクトリへ移動
 cd $dir
 
 # ソース設定

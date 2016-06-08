@@ -90,7 +90,7 @@ if [ "$screen" != "enable" ]; then
 fi
 
 # ビルド処理
-## ビルドフォルダへの移動
+## ビルドディレクトリへの移動
 cd $shdir
 
 ## 事前設定
@@ -108,7 +108,7 @@ if [ $? -eq 0 ]; then
         . ../config.sh
 fi
 
-# 事前フォルダ作成
+# 事前ディレクトリ作成
 mkdir -p ../$logfolder
 mkdir -p ../$zipfolder
 
@@ -180,13 +180,14 @@ zipname=$getvar
 if [ "$zipname" = "" ]; then
         zipname="*"
 fi
-starttwit="$device 向け $source のビルドを開始します。\n$starttime"
 
-## ソースフォルダ内設定情報を取得
+## ソースディレクトリ内設定情報を取得
 (ls ./config.sh) >& /dev/null
 if [ $? -eq 0 ]; then
         . ./config.sh
 fi
+
+starttwit="$device 向け $source のビルドを開始します。\n$starttime"
 
 ## 設定情報を取得
 (ls ../config.sh) >& /dev/null
