@@ -164,11 +164,13 @@ if [ "$optmc" = "-c" ]; then
 fi
 
 ## 設定情報取得前設定
+breakfast $device
 logfiletime=$(date '+%Y-%m-%d_%H-%M-%S')
 logfilename="${logfiletime}_${shdir}_${device}"
 starttime=$(date '+%m/%d %H:%M:%S')
 zipdate=$(date -u '+%Y%m%d')
-zipname=$(get_build_var CM_VERSION)
+getvar=$(get_build_var CM_VERSION)
+zipname=$getvar
 if [ "$zipname" = "" ]; then
         zipname="*"
 fi
@@ -204,13 +206,13 @@ fi
 
 ### ビルドが成功したか確認します。
 if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
-        res=1
-else
         res=0
+else
+        res=1
 fi
 
 ### ファイル移動
-if [ $res -eq 1 ]; then
+if [ $res -eq 0 ]; then
         mv --backup=t out/target/product/${device}/${zipname}.zip ../${zipfolder}
 fi
 cd ..
@@ -231,7 +233,7 @@ fi
 
 ### ビルド終了ツイート処理
 if [ "$tweet" = "-t" ]; then
-        if [ $res -eq 1 ]; then
+        if [ $res -eq 0 ]; then
                 if [ "$zipname" != "*" ]; then
                         echo -e $endziptwit | python tweet.py
                 else
@@ -242,5 +244,9 @@ if [ "$tweet" = "-t" ]; then
         fi
 fi
 
-echo "終了まで10秒待ちます。Ctrl+Cで終了できます。"
-sleep 10
+### End
+if [ $res -eq 0 ]; then
+	exit 0
+else
+	exit 1
+fi
