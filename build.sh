@@ -65,27 +65,26 @@ if [ "$shdir" = "" ]; then
         outcr $red "ディレクトリが指定されていません。指定してください。" 1>&2
         check="true"
 fi
+
 if [ "$device" = "" ]; then
         outcr $red "デバイスが指定されていません。指定してください。" 1>&2
         check="true"
 fi
+
+cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
+breakfast $device >& /dev/null
+if [ $? -ne 0 ]; then
+        outcr $red "デバイスツリーが存在しないか不正です。入力が間違っていないか確認してください。" 1>&2
+        check="true"
+fi
+cd ..
+
 if [ "$check" = "true" ]; then
 	usage_exit
 fi
 
 # screenで起動しているか確認
-## 何故この処理が必要か:
-##      リモートシェルでコマンドを実行しているときは突然の問題発生があり得ます。
-##      例えば接続断が起きるとコマンドは終了してしまいます。
-##      それらのリスクを軽減する為に行います。
 if [ "$screen" != "enable" ]; then
-        cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
-        breakfast $device >& /dev/null
-        if [ $? -ne 0 ]; then
-           outcr $red "デバイスが存在しません。文字列が間違っていないか確認してください。" 1>&2
-           usage_exit
-        fi
-        cd ..
         screen $0 "$@" -x
         exit 0
 fi
@@ -115,6 +114,7 @@ mkdir -p ../$zipfolder
 
 ## build/envsetup.shの読み込み
 source build/envsetup.sh >& /dev/null
+breakfast $device >& /dev/null
 
 
 ## repo syncを行うか確認
@@ -164,9 +164,15 @@ if [ "$optmc" = "-c" ]; then
 fi
 
 ## 設定情報取得前設定
-breakfast $device
 logfiletime=$(date '+%Y-%m-%d_%H-%M-%S')
 logfilename="${logfiletime}_${shdir}_${device}"
+model=$(cat device/*/$device/cm.mk 2>&1 | grep 'PRODUCT_MODEL' | cut -c 18-)
+if [ "$model" = "" ]; then
+        model=$(cat device/*/$device/full_$device.mk 2>&1 | grep 'PRODUCT_MODEL' | cut -c 18-)
+fi
+if [ "$model" = "" ]; then
+        model=$device
+fi
 starttime=$(date '+%m/%d %H:%M:%S')
 zipdate=$(date -u '+%Y%m%d')
 getvar=$(get_build_var CM_VERSION)
@@ -219,11 +225,11 @@ cd ..
 
 ### 設定情報取得前設定
 unset endstr
-endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/()//g')
+endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g')
 endtime=$(date '+%m/%d %H:%M:%S')
-stoptwit="$device 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
-endtwit="$device 向け $source のビルドが成功しました!\n$endstr\n$endtime"
-endziptwit="$zipname のビルドに成功しました!\n$endstr\n$endtime"
+stoptwit="$model 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
+endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$endtime"
+endziptwit="$model のビルドに成功しました!\n$endstr\n$endtime"
 
 ### 設定情報を取得
 (ls ./config.sh) >& /dev/null
@@ -244,9 +250,5 @@ if [ "$tweet" = "-t" ]; then
         fi
 fi
 
-### End
-if [ $res -eq 0 ]; then
-	exit 0
-else
-	exit 1
-fi
+### ビルドのコマンドと同じ終了ステータスを渡す
+exit $res
