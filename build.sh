@@ -218,7 +218,7 @@ cd ..
 
 ### 設定情報取得前設定
 unset endstr
-endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g')
+endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g')
 endtime=$(date '+%m/%d %H:%M:%S')
 stoptwit="$model 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
 endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$endtime"
