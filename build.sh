@@ -44,13 +44,7 @@ usage_exit(){
 while getopts d:r:j:cstmx var
 do
     case $var in
-        d) shdir=$OPTARG
-           (ls $shdir) >& /dev/null
-           if [ $? -eq 2 ]; then
-              color $red "指定されたディレクトリが存在しません。文字列が間違っていないか確認してください。" 1>&2
-              check="true"
-           fi
-           ;;
+        d) shdir=$OPTARG ;;
         r) device=$OPTARG ;;
         c) optmc="-c" ;;
         s) optrs="-s" ;;
@@ -64,7 +58,10 @@ done
 if [ "$shdir" = "" ]; then
         color $red "ディレクトリが指定されていません。指定してください。" 1>&2
         check="true"
-else
+elif [ ! -e $dir ]; then
+	color $red "指定されたディレクトリが存在しません。指定が間違っていないか確認してください。" 1>&2
+	check="true"
+else 
         cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
         breakfast $device >& /dev/null
         if [ $? -ne 0 ]; then
