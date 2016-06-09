@@ -88,7 +88,7 @@ if [ "$init" = "true" ]; then
 		if [ "$source" = "" ]; then
 			source=$dir
 		fi
-		echo 'source=$source' > ./config.sh
+		echo 'source="'$source'"' > ./config.sh
 		color $green "ソース名 $source とセットされ設定が保存されました。"
 	fi
 	startinittime=$(date '+%m/%d %H:%M:%S')
