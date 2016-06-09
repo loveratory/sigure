@@ -11,7 +11,7 @@ green=32
 yellow=33
 blue=34
 
-function outcr {
+function color {
         color=$1
         shift
         echo -e "\033[${color}m$@\033[m" $3
@@ -21,9 +21,9 @@ function outcr {
 ## このプログラムの動作にはscreenコマンドが必要です
 (type screen) >& /dev/null
 if [ $? -eq 1 ]; then
-        outcr $red "screenがインストールされていません。" 1>&2
-        outcr $red "動作に必要ですのでインストールしてください。" 1>&2
-        outcr $red "Ubuntuであれば apt-get install screen で入ります。"
+        color $red "screenがインストールされていません。" 1>&2
+        color $red "動作に必要ですのでインストールしてください。" 1>&2
+        color $red "Ubuntuであれば apt-get install screen で入ります。"
         check="true"
 fi
 
@@ -47,7 +47,7 @@ do
         d) shdir=$OPTARG
            (ls $shdir) >& /dev/null
            if [ $? -eq 2 ]; then
-              outcr $red "指定されたディレクトリが存在しません。文字列が間違っていないか確認してください。" 1>&2
+              color $red "指定されたディレクトリが存在しません。文字列が間違っていないか確認してください。" 1>&2
               check="true"
            fi
            ;;
@@ -62,19 +62,19 @@ do
 done
 
 if [ "$shdir" = "" ]; then
-        outcr $red "ディレクトリが指定されていません。指定してください。" 1>&2
+        color $red "ディレクトリが指定されていません。指定してください。" 1>&2
         check="true"
 fi
 
 if [ "$device" = "" ]; then
-        outcr $red "デバイスが指定されていません。指定してください。" 1>&2
+        color $red "デバイスが指定されていません。指定してください。" 1>&2
         check="true"
 fi
 
 cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
 breakfast $device >& /dev/null
 if [ $? -ne 0 ]; then
-        outcr $red "デバイスツリーが存在しないか不正です。入力が間違っていないか確認してください。" 1>&2
+        color $red "デバイスツリーが存在しないか不正です。入力が間違っていないか確認してください。" 1>&2
         check="true"
 fi
 cd ..
@@ -129,7 +129,7 @@ if [ "$optrs" = "-s" ]; then
 	        . ../config.sh
 	fi
 	
-        outcr $blue "repo syncを開始します。"
+        color $blue "repo syncを開始します。"
 	if [ "$tweet" = "-t" ]; then
 		echo -e $startsync | python ../tweet.py
 	fi
@@ -159,7 +159,7 @@ fi
 
 ## make cleanを行うか確認
 if [ "$optmc" = "-c" ]; then
-        outcr $blue "make cleanを開始します。"
+        color $blue "make cleanを開始します。"
         make clean
 fi
 
@@ -203,10 +203,10 @@ fi
 ## ビルド実行
 LANG=C
 if [ "$make" = "enable" ]; then
-	outcr $blue "ビルドをmakeで開始します。"
+	color $blue "ビルドをmakeで開始します。"
 	make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
 else
-	outcr $blue "ビルドをbrunchで開始します。"
+	color $blue "ビルドをbrunchで開始します。"
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 fi
 
