@@ -64,20 +64,20 @@ done
 if [ "$shdir" = "" ]; then
         color $red "ディレクトリが指定されていません。指定してください。" 1>&2
         check="true"
+else
+        cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
+        breakfast $device >& /dev/null
+        if [ $? -ne 0 ]; then
+                color $red "デバイスツリーが存在しないか不正です。入力が間違っていないか確認してください。" 1>&2
+                check="true"
+        fi
+        cd ..
 fi
 
 if [ "$device" = "" ]; then
         color $red "デバイスが指定されていません。指定してください。" 1>&2
         check="true"
 fi
-
-cd $shdir >& /dev/null && source build/envsetup.sh >& /dev/null
-breakfast $device >& /dev/null
-if [ $? -ne 0 ]; then
-        color $red "デバイスツリーが存在しないか不正です。入力が間違っていないか確認してください。" 1>&2
-        check="true"
-fi
-cd ..
 
 if [ "$check" = "true" ]; then
 	usage_exit
