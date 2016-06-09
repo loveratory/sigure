@@ -96,12 +96,10 @@ logfolder="log"
 zipfolder="zip"
 
 ## 設定情報を取得
-(ls ./config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
+if [ -e ./config.sh ]; then
         . ./config.sh
 fi
-(ls ../config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
+if [ -e ../config.sh ]; then
         . ../config.sh
 fi
 
@@ -142,8 +140,7 @@ if [ "$optrs" = "-s" ]; then
 		endsynctime=$(date '+%m/%d %H:%M:%S')
 		endsync="$source の repo sync が正常終了しました。\n$endsynctime"
 		stopsync="$source の repo sync が異常終了しました。\n$endsynctime"
-		(ls ../config.sh) >& /dev/null
-		if [ $? -eq 0 ]; then
+		if [ -e ../config.sh ]; then
 			. ../config.sh
 		fi
 		if [ $res -eq 0 ]; then
@@ -179,16 +176,14 @@ if [ "$zipname" = "" ]; then
 fi
 
 ## ソースディレクトリ内設定情報を取得
-(ls ./config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
+if [ -e ./config.sh ]; then
         . ./config.sh
 fi
 
 starttwit="$device 向け $source のビルドを開始します。\n$starttime"
 
 ## 設定情報を取得
-(ls ../config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
+if [ -e ../config.sh ]; then
         . ../config.sh
 fi
 
@@ -230,8 +225,7 @@ endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$end
 endziptwit="$model のビルドに成功しました!\n$endstr\n$endtime"
 
 ### 設定情報を取得
-(ls ./config.sh) >& /dev/null
-if [ $? -eq 0 ]; then
+if [ -e ./config.sh ]; then
         . ./config.sh
 fi
 
