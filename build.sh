@@ -29,23 +29,25 @@ fi
 
 # 異常時の終了処理及びヘルプ表示
 usage_exit(){
-        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread] [-m]" 1>&2
+        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread] [-f] [-m]" 1>&2
         echo -e "-r: brunchビルドを実行するデバイスネームを指定" 1>&2
         echo -e "-d: コマンドを実行するディレクトリを現在位置からの相対パスか絶対パスで指定" 1>&2
         echo -e "-c: make cleanを行う(オプション)" 1>&2
         echo -e "-s: repo syncを行うか(オプション)" 1>&2
         echo -e "-t: ツイートを行うか(オプション)" 1>&2
-	echo -e "-j: repo sync及び-mオプション時のmakeのスレッド数指定(オプション)" 1>&2
+	echo -e "-j: repo sync及び、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数指定(オプション)" 1>&2
+	echo -e "-f: brunchではなくコア数指定可能なfake brunchで実行する(オプション)" 1>&2
 	echo -e "-m: brunchではなくmakeで実行する(オプション)" 1>&2
         exit 1
 }
 
 # 引数処理
-while getopts d:r:j:cstmx var
+while getopts d:r:j:fcstmx var
 do
     case $var in
         d) shdir=$OPTARG ;;
         r) device=$OPTARG ;;
+	f) fakebrunch="enable" ;;
         c) optmc="-c" ;;
         s) optrs="-s" ;;
         t) tweet="-t" ;;
@@ -197,6 +199,9 @@ LANG=C
 if [ "$make" = "enable" ]; then
 	color $blue "ビルドをmakeで開始します。"
 	make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
+elif [ "$fakebrunch" = "enable" ]; then
+	color $blue "ビルドをfake brunchで開始します。"
+	mk_timer schedtool -B -n 1 -e ionice -n 1 make -C $(gettop) -j$thread bacon 2>&1 | tee "../$logfolder/$logfilename.log"
 else
 	color $blue "ビルドをbrunchで開始します。"
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
