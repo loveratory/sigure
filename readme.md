@@ -1,8 +1,11 @@
 # sigure build tool
 ## まずはじめに
-パブリックドメインとします。ぐちゃぐちゃなのは許して
+ライセンスはパブリック・ドメインとします。  
+Twitter: [@siguroid](https://twitter.com/siguroid) を動かしているコードです。
+
 ## 仕様
 ビルドしたいソースディレクトリの一個上のディレクトリに配置してください。  
+
 ```
 使用法: ./build.sh [-d dir] [-r device] [-c] [-s] [-t] [-j thread] [-m]
 -r: brunchビルドを実行するデバイスネームを指定
@@ -12,14 +15,23 @@
 -t: ツイートを行うか(オプション)
 -j: repo sync及び-mオプション時のmakeのスレッド数指定(オプション)
 -m: brunchではなくmakeで実行する(オプション)
- ```
+```
+
+```
+使用法: ./sync.sh [-d dir] [-j thread] [-t] [-i URI]
+-d: repo syncを行うディレクトリ
+-j: repo syncを行うスレッドの数(オプション)
+-t: ツイートを行う(オプション)
+-i: 指定されたURIでrepo initを行う(オプション)
+```
  
 ## 導入
 ```
 cd ~/
 wget https://raw.githubusercontent.com/otofune/sigure/master/build.sh
+wget https://raw.githubusercontent.com/otofune/sigure/master/sync.sh
 wget https://raw.githubusercontent.com/otofune/sigure/master/tweet.py
-chmod 755 build.sh
+chmod 755 build.sh sync.sh
 ```
 bashがインストールされている必要があります。  
 screenというソフトウエアを利用します。  
@@ -28,6 +40,13 @@ screenというソフトウエアを利用します。
 ```
 sudo apt-get install bash python-pip screen
 pip install requests_oauthlib
+```
+
+## 注意点
+repo.shにおいて、URIとされているフィールドに入れた文字列はrepo init $URIとして実行されるため、ブランチの指定も入れて良いが、空白が含まれる場合はダブルクオーテーションで囲って指定すること。
+
+```
+./sync.sh -d AICP -i "https://github.com/AICP/platform_manifest.git -b mm6.0" -j 4 -t
 ```
 
 ## その他
