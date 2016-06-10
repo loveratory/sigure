@@ -36,7 +36,7 @@ usage_exit(){
         echo -e "-s: repo syncを行うか(オプション)" 1>&2
         echo -e "-t: ツイートを行うか(オプション)" 1>&2
 	echo -e "-j: repo sync及び、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数指定(オプション)" 1>&2
-	echo -e "-f: brunchではなくコア数指定可能なfake brunchで実行する(オプション)" 1>&2
+	echo -e "-f: brunchではなくスレッド数指定可能なfake brunchで実行する(オプション)" 1>&2
 	echo -e "-m: brunchではなくmakeで実行する(オプション)" 1>&2
         exit 1
 }
@@ -201,7 +201,7 @@ if [ "$make" = "enable" ]; then
 	make -j$thread 2>&1 | tee "../$logfolder/$logfilename.log"
 elif [ "$fakebrunch" = "enable" ]; then
 	color $blue "ビルドをfake brunchで開始します。"
-	mk_timer schedtool -B -n 1 -e ionice -n 1 make -C $(gettop) -j$thread bacon 2>&1 | tee "../$logfolder/$logfilename.log"
+	schedtool -B -n 1 -e ionice -n 1 make -C $(gettop) -j$thread bacon 2>&1 | tee "../$logfolder/$logfilename.log"
 else
 	color $blue "ビルドをbrunchで開始します。"
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
