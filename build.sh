@@ -133,12 +133,9 @@ if [ "$optrs" = "-s" ]; then
 
         repo sync -j$thread --force-sync
 
+        res=$?
+
 	if [ "$tweet" = "-t" ]; then
-	        if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
-			res=0
-        	else
-			res=1
-        	fi
 		endsynctime=$(date '+%m/%d %H:%M:%S')
 		endsync="$source の repo sync が正常終了しました。\n$endsynctime"
 		stopsync="$source の repo sync が異常終了しました。\n$endsynctime"
@@ -207,16 +204,10 @@ else
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 fi
 
-
-### ビルドが成功したか確認します。
-if [ $(echo ${PIPESTATUS[0]}) -eq 0 ]; then
-        res=0
-else
-        res=1
-fi
+result=$?
 
 ### ファイル移動
-if [ $res -eq 0 ]; then
+if [ $result -eq 0 ]; then
         mv --backup=t out/target/product/${device}/${zipname}.zip ../${zipfolder}
 fi
 cd ..
@@ -236,7 +227,7 @@ fi
 
 ### ビルド終了ツイート処理
 if [ "$tweet" = "-t" ]; then
-        if [ $res -eq 0 ]; then
+        if [ $result -eq 0 ]; then
                 if [ "$zipname" != "*" ]; then
                         echo -e $endziptwit | python tweet.py
                 else
@@ -248,4 +239,4 @@ if [ "$tweet" = "-t" ]; then
 fi
 
 ### ビルドのコマンドと同じ終了ステータスを渡す
-exit $res
+exit $result
