@@ -29,15 +29,16 @@ fi
 
 # 異常時の終了処理及びヘルプ表示
 usage_exit(){
-        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-s] [-t] [-j thread] [-f] [-m]" 1>&2
-        echo -e "-r: brunchビルドを実行するデバイスネームを指定" 1>&2
-        echo -e "-d: コマンドを実行するディレクトリを現在位置からの相対パスか絶対パスで指定" 1>&2
-        echo -e "-c: make cleanを行う(オプション)" 1>&2
-        echo -e "-s: repo syncを行うか(オプション)" 1>&2
-        echo -e "-t: ツイートを行うか(オプション)" 1>&2
-	echo -e "-j: repo sync及び、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数指定(オプション)" 1>&2
-	echo -e "-f: brunchではなくスレッド数指定可能なfake brunchで実行する(オプション)" 1>&2
-	echo -e "-m: brunchではなくmakeで実行する(オプション)" 1>&2
+        echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-f] [-j thread] [-m] [-s] [-t] [-x]" 1>&2
+        echo -e "-d: ソースディレクトリを現在位置からの相対パスか絶対パス" 1>&2
+	echo -e "-r: 実行するデバイスネーム" 1>&2
+	echo -e "-c: make cleanを行う(オプション)" 1>&2
+	echo -e "-f: brunchではなくスレッド数指定可能なfake brunchで行う(オプション)" 1>&2
+	echo -e "-j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数(オプション)" 1>&2
+	echo -e "-m: brunchではなくmakeで行う(オプション)" 1>&2
+        echo -e "-s: repo syncを行う(オプション)" 1>&2
+        echo -e "-t: ツイートを行う(オプション)" 1>&2
+	echo -e "-x: screenチェックをスキップ(オプション)" 1>&2
         exit 1
 }
 

@@ -7,15 +7,16 @@ Twitter: [@siguroid](https://twitter.com/siguroid) を動かしているコー�
 ビルドしたいソースディレクトリの一個上のディレクトリに配置してください。  
 
 ```
-使用法: ./build.sh [-d dir] [-r device] [-c] [-s] [-t] [-j thread] [-f] [-m]
--r: brunchビルドを実行するデバイスネームを指定
--d: コマンドを実行するディレクトリを現在位置からの相対パスか絶対パスで指定
+使用法: ./build.sh [-d dir] [-r device] [-c] [-f] [-j thread] [-m] [-s] [-t] [-x]
+-d: ソースディレクトリを現在位置からの相対パスか絶対パス
+-r: 実行するデバイスネーム
 -c: make cleanを行う(オプション)
--s: repo syncを行うか(オプション)
--t: ツイートを行うか(オプション)
--j: repo sync及び、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数指定(オプション)
--f: brunchではなくスレッド数指定可能なfake brunchで実行する(オプション)
--m: brunchではなくmakeで実行する(オプション)
+-f: brunchではなくスレッド数指定可能なfake brunchで行う(オプション)
+-j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数(オプション)
+-m: brunchではなくmakeで行う(オプション)
+-s: repo syncを行う(オプション)
+-t: ツイートを行う(オプション)
+-x: screenチェックをスキップ(オプション)
 ```
 
 ```
