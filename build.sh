@@ -204,7 +204,7 @@ else
 	brunch $device 2>&1 | tee "../$logfolder/$logfilename.log"
 fi
 
-result=$?
+result=${PIPESTATUS[0]}
 
 ### ファイル移動
 if [ $result -eq 0 ]; then
