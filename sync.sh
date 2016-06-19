@@ -20,7 +20,7 @@ function color {
 usage_exit(){
 	echo -e "\n使用法: $0 [-d dir] [-j thread] [-t] [-i URI]" 1>&2
 	echo -e "-d: repo syncを行うディレクトリ" 1>&2
-	echo -e "-j: repo syncを行うスレッドの数(オプション)" 1>&2
+	echo -e "-j: repo syncを行うジョブ数(オプション)" 1>&2
 	echo -e "-t: ツイートを行う(オプション)" 1>&2
 	echo -e "-i: 指定されたURIでrepo initを行う(オプション)" 1>&2
 	exit 1
@@ -132,7 +132,7 @@ if [ "$tweet" = "true" ]; then
 fi
 
 # repo sync 実行/終了文言
-repo sync -j$thread
+repo sync --jobs $thread --current-branch --force-broken --force-sync --no-clone-bundle
 if [ $? -eq 0 ]; then
 	res=true
 	color $blue "repo syncが成功しました。"

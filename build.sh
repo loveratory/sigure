@@ -33,8 +33,8 @@ usage_exit(){
         echo -e "-d: ソースディレクトリを現在位置からの相対パスか絶対パス" 1>&2
 	echo -e "-r: 実行するデバイスネーム" 1>&2
 	echo -e "-c: make cleanを行う(オプション)" 1>&2
-	echo -e "-f: brunchではなくスレッド数指定可能なfake brunchで行う(オプション)" 1>&2
-	echo -e "-j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数(オプション)" 1>&2
+	echo -e "-f: brunchではなくfake brunchで行う(オプション)" 1>&2
+	echo -e "-j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのジョブ数(オプション)" 1>&2
 	echo -e "-m: brunchではなくmakeで行う(オプション)" 1>&2
         echo -e "-s: repo syncを行う(オプション)" 1>&2
         echo -e "-t: ツイートを行う(オプション)" 1>&2
@@ -132,7 +132,7 @@ if [ "$optrs" = "-s" ]; then
 		echo -e $startsync | python ../tweet.py
 	fi
 
-        repo sync -j$thread --force-sync
+        repo sync --jobs $thread --current-branch --force-broken --force-sync --no-clone-bundle
 
         res=$?
 

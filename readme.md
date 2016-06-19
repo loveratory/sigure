@@ -11,8 +11,8 @@ Twitter: [@siguroid](https://twitter.com/siguroid) を動かしているコー�
 -d: ソースディレクトリを現在位置からの相対パスか絶対パス
 -r: 実行するデバイスネーム
 -c: make cleanを行う(オプション)
--f: brunchではなくスレッド数指定可能なfake brunchで行う(オプション)
--j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのスレッド数(オプション)
+-f: brunchではなくfake brunchで行う(オプション)
+-j: repo sync、-fオプション時のfake brunch、-mオプション時のmakeのジョブ数(オプション)
 -m: brunchではなくmakeで行う(オプション)
 -s: repo syncを行う(オプション)
 -t: ツイートを行う(オプション)
@@ -22,7 +22,7 @@ Twitter: [@siguroid](https://twitter.com/siguroid) を動かしているコー�
 ```
 使用法: ./sync.sh [-d dir] [-j thread] [-t] [-i URI]
 -d: repo syncを行うディレクトリ
--j: repo syncを行うスレッドの数(オプション)
+-j: repo syncを行うジョブ数(オプション)
 -t: ツイートを行う(オプション)
 -i: 指定されたURIでrepo initを行う(オプション)
 ```
