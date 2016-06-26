@@ -180,7 +180,7 @@ if [ -e ./config.sh ]; then
         . ./config.sh
 fi
 
-starttwit="$device 向け $source のビルドを開始します。\n$starttime"
+starttwit="$model 向け $source のビルドを開始します。\n$starttime"
 
 ## 設定情報を取得
 if [ -e ../config.sh ]; then
