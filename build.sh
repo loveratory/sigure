@@ -214,11 +214,11 @@ endtime=$(date '+%m/%d %H:%M:%S')
 if [ "$endstr" = "" ]; then
         stoptwit="$model 向け $source のビルドが失敗しました。\n$endtime"
         endtwit="$model 向け $source のビルドが成功しました!\n$endtime"
-        endziptwit="$model のビルドに成功しました!\n$endtime"
+        endziptwit="$zipname のビルドに成功しました!\n$endtime"
 else
 	stoptwit="$model 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
 	endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$endtime"
-	endziptwit="$model のビルドに成功しました!\n$endstr\n$endtime"
+	endziptwit="$zipname のビルドに成功しました!\n$endstr\n$endtime"
 fi
 
 ### 設定情報を取得
