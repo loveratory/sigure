@@ -209,7 +209,7 @@ cd ..
 
 ### 設定情報取得前設定
 unset endstr
-endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
+endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
 endtime=$(date '+%m/%d %H:%M:%S')
 if [ "$endstr" = "" ]; then
         stoptwit="$model 向け $source のビルドが失敗しました。\n$endtime"
