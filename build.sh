@@ -160,13 +160,7 @@ fi
 ## 設定情報取得前設定
 logfiletime=$(date '+%Y-%m-%d_%H-%M-%S')
 logfilename="${logfiletime}_${shdir}_${device}"
-model=$(cat device/*/$device/cm.mk 2>&1 | grep 'PRODUCT_MODEL' | cut -c 18-)
-if [ "$model" = "" ]; then
-        model=$(cat device/*/$device/full_$device.mk 2>&1 | grep 'PRODUCT_MODEL' | cut -c 18-)
-fi
-if [ "$model" = "" ]; then
-        model=$device
-fi
+model=$(get_build_var PRODUCT_MODEL)
 starttime=$(date '+%m/%d %H:%M:%S')
 zipdate=$(date -u '+%Y%m%d')
 getvar=$(get_build_var CM_VERSION)
@@ -217,9 +211,15 @@ cd ..
 unset endstr
 endstr=$(tail -2 "$logfolder/$logfilename.log" | head -1 | grep "#" | cut -d "#" -f 5 | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
 endtime=$(date '+%m/%d %H:%M:%S')
-stoptwit="$model 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
-endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$endtime"
-endziptwit="$model のビルドに成功しました!\n$endstr\n$endtime"
+if [ "$endstr" = "" ]; then
+        stoptwit="$model 向け $source のビルドが失敗しました。\n$endtime"
+        endtwit="$model 向け $source のビルドが成功しました!\n$endtime"
+        endziptwit="$model のビルドに成功しました!\n$endtime"
+else
+	stoptwit="$model 向け $source のビルドが失敗しました。\n$endstr\n$endtime"
+	endtwit="$model 向け $source のビルドが成功しました!\n$endstr\n$endtime"
+	endziptwit="$model のビルドに成功しました!\n$endstr\n$endtime"
+fi
 
 ### 設定情報を取得
 if [ -e ./config.sh ]; then
