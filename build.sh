@@ -71,16 +71,16 @@ function color () {
 function usage_exit () {
     echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-f] [-j thread] [-m] [-s] [-t] [-x]" 1>&2
     echo -e "-d: ソースディレクトリを現在位置からの相対パスか絶対パス" 1>&2
-	echo -e "-r: 実行するデバイスネーム" 1>&2
-	echo -e "-c: make cleanを行う(オプション)" 1>&2
-	echo -e "-f: brunchではなくfake brunchで行う(オプション)" 1>&2
-	echo -e "-j: ジョブ数(オプション)" 1>&2
-	echo -e "-m: brunchではなくmakeで行う(オプション)" 1>&2
+    echo -e "-r: 実行するデバイスネーム" 1>&2
+    echo -e "-c: make cleanを行う(オプション)" 1>&2
+    echo -e "-f: brunchではなくfake brunchで行う(オプション)" 1>&2
+    echo -e "-j: ジョブ数(オプション)" 1>&2
+    echo -e "-m: brunchではなくmakeで行う(オプション)" 1>&2
     echo -e "-s: repo syncを行う(オプション)" 1>&2
     echo -e "-t: ツイートを行う(オプション)" 1>&2
-	echo -e "-x: チェック機構を全てスキップ(オプション)" 1>&2
-	echo -e "Enterを押すまで終了を待機します..." 1>&2
-	read temp
+    echo -e "-x: チェック機構を全てスキップ(オプション)" 1>&2
+    echo -e "Enterを押すまで終了を待機します..." 1>&2
+    read temp
     exit 1
 }
 
@@ -88,8 +88,8 @@ function error () {
     echo -e "\n動作環境がセットアップされていないようです。" 1>&2
     echo -e "以下のREADMEを十分に読みセットアップを行ってください。" 1>&2
     echo -e "URL: https://github.com/otofune/sigure/blob/master/readme.md" 1>&2
-	echo -e "Enterを押すまで終了を待機します..." 1>&2
-	read temp
+    echo -e "Enterを押すまで終了を待機します..." 1>&2
+    read temp
     exit 1
 }
 
