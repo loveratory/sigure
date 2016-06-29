@@ -310,6 +310,9 @@ res_build=${PIPESTATUS[0]}
 # ファイル移動
 if [ $res_build -eq 0 ]; then
     mv --backup=t out/target/product/$target_device/$zip_name/ ../$zip_folder_name
+    mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/successful/$log_file_name.log
+else
+    mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/failed/$log_file_name.log
 fi
 
 # 後処理
