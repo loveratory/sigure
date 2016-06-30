@@ -222,19 +222,21 @@ if [ "$repo_sync" = "true" ]; then
     
     # 前処理
 
+    color $blue "ビルド前breakfastを実行します。"
     source build/envsetup.sh >& /dev/null
-    breakfast $device >& /dev/null
+    breakfast $target_device >& /dev/null
     if [ $? -ne 0 ]; then
-    color $red "デバイスツリーが正常ではありません。" 1>&2
-    usage_exit
+        color $red "デバイスツリーが正常ではありません。" 1>&2
+        usage_exit
     fi
 
 else
 
     # 前処理
 
+    color $blue "ビルド前breakfastを実行します。"
     source build/envsetup.sh >& /dev/null
-    breakfast $device >& /dev/null
+    breakfast $target_device >& /dev/null
     if [ $? -ne 0 ]; then
         color $red "デバイスツリーが正常ではありません。" 1>&2
         usage_exit
