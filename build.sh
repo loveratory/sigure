@@ -212,7 +212,7 @@ if [ "$repo_sync" = "true" ]; then
             . ../config.sh
         fi
 
-        if [ $res -eq 0 ]; then
+        if [ $res_sync -eq 0 ]; then
             echo -e $end_sync_tweet | python ../tweet.py
         else
             echo -e $stop_sync_tweet | python ../tweet.py
