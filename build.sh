@@ -272,7 +272,7 @@ fi
 # 変数初期値設定
 
 log_file_time=$(date '+%Y-%m-%d_%H-%M-%S')
-log_file_name="${logfiletime}_${shdir}_${device}"
+log_file_name="${log_file_time}_${source_dir}_${target_device}"
 
 # ツイート処理
 
