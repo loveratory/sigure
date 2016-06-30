@@ -1,3 +1,4 @@
 # Resurrection Remix Marshmallowのソースディレクトリに配置するconfig.sh
-rrversion="$(echo $getvar | cut -c21-26)"
-source="Resurrection Remix $rrversion"
+zip_name=$(get_build_var CM_VERSION)
+rr_version="$(echo $zip_name | cut -c21-26)"
+source_name="Resurrection Remix $rr_version"
