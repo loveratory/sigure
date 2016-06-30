@@ -304,7 +304,7 @@ elif [ "$make_mode" = "true" ]; then
     make -j$pararell_jobs 2>&1 | tee "../$log_folder_name/$log_file_name.log"
 else
     color $blue "ビルドをbrunchで開始します。"
-    brunch $device 2>&1 | tee "../$log_folder_name/$log_file_name.log"
+    brunch $target_device 2>&1 | tee "../$log_folder_name/$log_file_name.log"
 fi
 
 res_build=${PIPESTATUS[0]}
