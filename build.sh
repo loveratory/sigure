@@ -320,7 +320,7 @@ if [ "$repo_sync" = "true" ]; then
         source build/envsetup.sh >& /dev/null
         breakfast $target_device >& /dev/null
 
-        $res_source=$?
+        res_source=$?
 
         if [ -f ./config.sh ]; then
             . ./config.sh
