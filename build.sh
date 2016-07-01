@@ -134,8 +134,10 @@ fi
 # デバイスツリーの指定をチェック
 
 if [ "$target_device" = "" ]; then
-    color $red "デバイスが指定されていません。" 1>&2
-    check="true"
+    if [ "$repo_init_uri" = "" ]; then
+        color $red "デバイスが指定されていません。" 1>&2
+        check="true"
+    fi
 fi
 
 # 終了フラグを回収
@@ -171,25 +173,15 @@ if [ "$repo_init_uri" != "" ]; then
     cd $source_dir
 
     # ソース名取得
-    
-    if [ ! -e ./config.sh ]; then
 
-        color $blue "ソース名を入力してください"
-        echo -n "ソース名: "
-        read source_name
-        if [ "$source_name" = "" ]; then
-            source_name=$source_dir
-        fi
-        echo "source_name="$source_name > ./config.sh
-        color $green "ソース名 $source_name とセットされ設定が保存されました。"
-
-	else
-
-        if [ "$tweet" = "true" ]; then
-            . ./config.sh
-        fi
-
+    color $blue "ソース名を入力してください"
+    echo -n "ソース名: "
+    read source_name
+    if [ "$source_name" = "" ]; then
+        source_name=$source_dir
     fi
+    echo "source_name="$source_name > ./config.sh
+    color $green "ソース名 $source_name とセットされ設定が保存されました。"
 
     # ツイート
 
@@ -225,10 +217,65 @@ if [ "$repo_init_uri" != "" ]; then
 
         fi
 
+        exit 1
+
+    else
+
+        color $blue "repo syncを開始します。"
+
+        # ツイート
+        if [ "$tweet" = "true" ]; then
+
+            # 変数初期値設定
+
+            start_sync_time=$(date '+%m/%d %H:%M:%S')
+            start_sync_tweet="$source_name の repo sync を開始します。\n$start_sync_time"
+
+            if [ -f ../config.sh ]; then
+                . ../config.sh
+            fi
+
+            echo -e $start_sync_tweet | python ../tweet.py
+        
+        fi
+
+        repo sync --jobs $pararell_jobs --current-branch --force-broken --force-sync --no-clone-bundle
+
+        res_sync=$?
+
+        # ツイート
+        if [ "$tweet" = "true" ]; then
+
+            # 変数初期値設定
+
+            end_sync_time=$(date '+%m/%d %H:%M:%S')
+            stop_sync_tweet="$source_name の repo sync が異常終了しました。\n$end_sync_time"
+            end_sync_tweet="$source_name の repo sync が正常終了しました。\n$end_sync_time"
+
+            if [ -f ../config.sh ]; then
+                . ../config.sh
+            fi
+
+            if [ $res_sync -eq 0 ]; then
+
+                echo -e $end_sync_tweet | python ../tweet.py
+                exit $res_sync
+
+            else
+
+                echo -e $stop_sync_tweet | python ../tweet.py
+                exit $res_sync
+
+            fi
+
+        fi
+
     fi
 
 else
+
     cd $source_dir
+
 fi
 
 # repo sync
