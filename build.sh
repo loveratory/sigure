@@ -193,6 +193,9 @@ if [ "$repo_sync" = "true" ]; then
 
     # ツイート処理
     if [ "$tweet" = "true" ]; then
+    
+        source build/envsetup.sh >& /dev/null
+        breakfast $target_device >& /dev/null
 
         # ソースフォルダ内設定ファイル読み込み
 
@@ -222,7 +225,6 @@ if [ "$repo_sync" = "true" ]; then
     
     # 前処理
 
-    color $blue "ビルド前breakfastを実行します。"
     source build/envsetup.sh >& /dev/null
     breakfast $target_device >& /dev/null
     if [ $? -ne 0 ]; then
@@ -234,7 +236,6 @@ else
 
     # 前処理
 
-    color $blue "ビルド前breakfastを実行します。"
     source build/envsetup.sh >& /dev/null
     breakfast $target_device >& /dev/null
     if [ $? -ne 0 ]; then
