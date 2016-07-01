@@ -21,6 +21,7 @@ unset temp
 unset get_build_var_cm
 unset start_init_time
 unset start_init_tweet
+unset res_init
 unset stop_init_time
 unset stop_init_tweet
 unset start_sync_time
@@ -199,6 +200,8 @@ if [ "$repo_init_uri" != "" ]; then
     fi
 
     repo init -u $repo_init_uri
+
+    res_init=$?
     
     if [ $? -ne 0 ]; then
 
@@ -217,7 +220,7 @@ if [ "$repo_init_uri" != "" ]; then
 
         fi
 
-        exit 1
+        exit $res_init
 
     else
 
@@ -259,16 +262,16 @@ if [ "$repo_init_uri" != "" ]; then
             if [ $res_sync -eq 0 ]; then
 
                 echo -e $end_sync_tweet | python ../tweet.py
-                exit $res_sync
 
             else
 
                 echo -e $stop_sync_tweet | python ../tweet.py
-                exit $res_sync
 
             fi
 
         fi
+
+        exit $res_sync
 
     fi
 
