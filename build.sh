@@ -8,7 +8,6 @@ unset zip_folder_name
 unset arg_name
 unset source_dir
 unset target_device
-unset fake_branch_mode
 unset make_clean
 unset repo_sync
 unset tweet
@@ -69,11 +68,10 @@ function color () {
 }
 
 function usage_exit () {
-    echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-f] [-j thread] [-m] [-s] [-t] [-x]" 1>&2
+    echo -e "\n使用法: $0 [-d dir] [-r "device"] [-c] [-j thread] [-m] [-s] [-t] [-x]" 1>&2
     echo -e "-d: ソースディレクトリを現在位置からの相対パスか絶対パス" 1>&2
     echo -e "-r: 実行するデバイスネーム" 1>&2
     echo -e "-c: make cleanを行う(オプション)" 1>&2
-    echo -e "-f: brunchではなくfake brunchで行う(オプション)" 1>&2
     echo -e "-j: ジョブ数(オプション)" 1>&2
     echo -e "-m: brunchではなくmakeで行う(オプション)" 1>&2
     echo -e "-s: repo syncを行う(オプション)" 1>&2
@@ -95,12 +93,11 @@ function error () {
 
 # 引数処理
 
-while getopts d:r:j:fcstmx arg_name
+while getopts d:r:j:cstmx arg_name
 do
     case $arg_name in
         d) source_dir=$OPTARG ;;
         r) target_device=$OPTARG ;;
-        f) fake_branch_mode="true" ;;
         c) make_clean="true" ;;
         s) repo_sync="true" ;;
         t) tweet="true" ;;
@@ -297,10 +294,7 @@ fi
 # ビルド処理
 
 LANG=C
-if [ "$fake_branch_mode" = "true" ]; then
-    color $blue "ビルドをfake brunchで開始します。"
-    mk_timer schedtool -B -n 1 -e ionice -n 1 make -C $(gettop) -j$pararell_jobs bacon 2>&1 | tee "../$log_folder_name/$log_file_name.log"
-elif [ "$make_mode" = "true" ]; then
+if [ "$make_mode" = "true" ]; then
     color $blue "ビルドをmakeで開始します。"
     make -j$pararell_jobs 2>&1 | tee "../$log_folder_name/$log_file_name.log"
 else
