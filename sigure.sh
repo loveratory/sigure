@@ -48,7 +48,7 @@ unset stop_build_tweet
 
 # 変数初期値設定
 
-script_dir=$(dirname $(readline -f $0))
+script_dir=$(dirname $(readlink -f $0))
 run_dir=$(pwd)
 pararell_jobs=4
 log_folder_name="logs"
