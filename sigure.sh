@@ -62,6 +62,7 @@ fi
 
 mkdir -p $run_dir/$log_folder_name/successful
 mkdir -p $run_dir/$log_folder_name/failed
+mkdir -p $run_dir/$log_folder_name/logging
 mkdir -p $run_dir/$zip_folder_name
 
 # 定数定義
@@ -419,10 +420,10 @@ fi
 LANG=C
 if [ "$make_mode" = "true" ]; then
     color $blue "ビルドをmakeで開始します。"
-    make -j$pararell_jobs 2>&1 | tee "$run_dir/$log_folder_name/$log_file_name.log"
+    make -j$pararell_jobs 2>&1 | tee "$run_dir/$log_folder_name/logging/$log_file_name.log"
 else
     color $blue "ビルドをbrunchで開始します。"
-    brunch $target_device 2>&1 | tee "$run_dir/$log_folder_name/$log_file_name.log"
+    brunch $target_device 2>&1 | tee "$run_dir/$log_folder_name/logging/$log_file_name.log"
 fi
 
 res_build=${PIPESTATUS[0]}
@@ -430,12 +431,12 @@ res_build=${PIPESTATUS[0]}
 # ファイル移動
 if [ $res_build -eq 0 ]; then
     res_build_str=successful
-    mv --backup=t $run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip $run_dir/$zip_folder_name
+    mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip" "$run_dir/$zip_folder_name"
 else
     res_build_str=failed
 fi
 
-mv $run_dir/$log_folder_name/$log_file_name.log $run_dir/$log_folder_name/$res_build_str/$log_file_name.log
+mv "$run_dir/$log_folder_name/logging/$log_filse_name.log" "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log"
 
 cd $run_dir
 
