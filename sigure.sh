@@ -428,7 +428,7 @@ if [ $res_build -eq 0 ]; then
     res_build_str=successful
     mv --backup=t out/target/product/$target_device/$zip_name.zip ../$zip_folder_name
 else
-    res_build=failed
+    res_build_str=failed
 fi
 
 mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/$res_build_str/$log_file_name.log
