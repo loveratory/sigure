@@ -186,7 +186,7 @@ if [ "$repo_init_uri" != "" ]; then
     if [ "$source_name" = "" ]; then
         source_name=$source_dir
     fi
-    echo "source_name="$source_name > $run_dir/$source_dir/config.sh
+    echo 'source_name="'$source_name'"' > $run_dir/$source_dir/config.sh
     color $green "ソース名 $source_name とセットされ設定が保存されました。"
 
     # ツイート
