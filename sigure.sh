@@ -54,8 +54,6 @@ pararell_jobs=4
 log_folder_name="logs"
 zip_folder_name="zips"
 
-echo $script_dir
-
 if [ -f $run_dir/config.sh ]; then
     . $run_dir/config.sh
 fi
