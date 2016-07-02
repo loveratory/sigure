@@ -48,11 +48,13 @@ unset stop_build_tweet
 
 # 変数初期値設定
 
-script_dir=$(dirname $0)
+script_dir=$(dirname $(readline -f $0)
 run_dir=$(pwd)
 pararell_jobs=4
 log_folder_name="logs"
 zip_folder_name="zips"
+
+echo $script_dir
 
 if [ -f $run_dir/config.sh ]; then
     . $run_dir/config.sh
@@ -200,7 +202,7 @@ if [ "$repo_init_uri" != "" ]; then
             . $run_dir/config.sh
         fi
 
-        echo -e $start_init_tweet | python $script_dir/tweet.sh
+        echo -e $start_init_tweet | $script_dir/tweet.sh
   
     fi
 
@@ -221,7 +223,7 @@ if [ "$repo_init_uri" != "" ]; then
                 . $run_dir/config.sh
             fi
 
-            echo -e $stop_init_tweet | python $script_dir/tweet.sh
+            echo -e $stop_init_tweet | $script_dir/tweet.sh
 
         fi
 
@@ -243,7 +245,7 @@ if [ "$repo_init_uri" != "" ]; then
                 . $run_dir/config.sh
             fi
 
-            echo -e $start_sync_tweet | python $script_dir/tweet.sh
+            echo -e $start_sync_tweet | $script_dir/tweet.sh
         
         fi
 
@@ -266,11 +268,11 @@ if [ "$repo_init_uri" != "" ]; then
 
             if [ $res_sync -eq 0 ]; then
 
-                echo -e $end_sync_tweet | python $script_dir/tweet.sh
+                echo -e $end_sync_tweet | $script_dir/tweet.sh
 
             else
 
-                echo -e $stop_sync_tweet | python $script_dir/tweet.sh
+                echo -e $stop_sync_tweet | $script_dir/tweet.sh
 
             fi
 
@@ -311,7 +313,7 @@ if [ "$repo_sync" = "true" ]; then
             . $run_dir/config.sh
         fi
 
-        echo -e $start_sync_tweet | python $script_dir/tweet.sh
+        echo -e $start_sync_tweet | $script_dir/tweet.sh
         
     fi
 
@@ -342,9 +344,9 @@ if [ "$repo_sync" = "true" ]; then
         fi
 
         if [ $res_sync -eq 0 ]; then
-            echo -e $end_sync_tweet | python $script_dir/tweet.sh
+            echo -e $end_sync_tweet | $script_dir/tweet.sh
         else
-            echo -e $stop_sync_tweet | python $script_dir/tweet.sh
+            echo -e $stop_sync_tweet | $script_dir/tweet.sh
         fi
 
     fi
@@ -410,7 +412,7 @@ if [ "$tweet" = "true" ]; then
         . $run_dir/config.sh
     fi
     
-    echo -e $start_build_tweet | python $script_dir/tweet.sh
+    echo -e $start_build_tweet | $script_dir/tweet.sh
     
 fi
 
@@ -463,12 +465,12 @@ if [ "$tweet" = "true" ]; then
     
     if [ $res_build -eq 0 ]; then
         if [ "$zip_name" != "*" ]; then
-            echo -e $end_build_zip_tweet | python $script_dir/tweet.sh
+            echo -e $end_build_zip_tweet | $script_dir/tweet.sh
         else
-            echo -e $end_build_tweet | python $script_dir/tweet.sh
+            echo -e $end_build_tweet | $script_dir/tweet.sh
         fi
     else
-        echo -e $stop_build_tweet | python $script_dir/tweet.sh
+        echo -e $stop_build_tweet | $script_dir/tweet.sh
     fi
     
 fi
