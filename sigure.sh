@@ -29,7 +29,7 @@ unset stop_init_tweet
 unset start_sync_time
 unset start_sync_tweet
 unset res_sync
-unset res_breakfast
+unset res_source
 unset end_sync_time
 unset end_sync_tweet
 unset stop_sync_tweet
@@ -349,7 +349,7 @@ if [ "$repo_sync" = "true" ]; then
 
     fi
 
-    if [ $res_breakfast -ne 0 ]; then
+    if [ $res_source -ne 0 ]; then
         color $red "デバイスツリーが正常ではありません。" 1>&2
         usage 1>&2
         sleep 30
