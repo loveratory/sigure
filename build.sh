@@ -37,6 +37,7 @@ unset zip_name
 unset start_build_time
 unset start_build_tweet
 unset res_build
+unset res_build_str
 unset end_build_log
 unset end_build_time
 unset end_build_tweet
@@ -424,11 +425,13 @@ res_build=${PIPESTATUS[0]}
 
 # ファイル移動
 if [ $res_build -eq 0 ]; then
+    res_build_str=successful
     mv --backup=t out/target/product/$target_device/$zip_name.zip ../$zip_folder_name
-    mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/successful/$log_file_name.log
 else
-    mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/failed/$log_file_name.log
+    res_build=failed
 fi
+
+mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/$res_build_str/$log_file_name.log
 
 cd ..
 
@@ -438,7 +441,7 @@ if [ "$tweet" = "true" ]; then
 
     # 変数初期値設定
 
-    end_build_log=$(tail -2 "$log_folder_name/$log_file_name.log" | head -1 | cut -d "#" -f 5 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
+    end_build_log=$(tail -2 "$log_folder_name/$res_build_str/$log_file_name.log" | head -1 | cut -d "#" -f 5 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
     end_build_time=$(date '+%m/%d %H:%M:%S')
     if [ "$end_build_log" = "" ]; then
         stop_build_tweet="$model_name 向け $source_name のビルドが失敗しました。\n$end_build_time"
