@@ -2,6 +2,8 @@
 
 # 変数除去
 
+unset script_dir
+unset run_dir
 unset pararell_jobs
 unset log_folder_name
 unset zip_folder_name
@@ -46,19 +48,21 @@ unset stop_build_tweet
 
 # 変数初期値設定
 
+script_dir=$(dirname $0)
+run_dir=$(pwd)
 pararell_jobs=4
 log_folder_name="logs"
 zip_folder_name="zips"
 
-if [ -f ./config.sh ]; then
-    . ./config.sh
+if [ -f $run_dir/config.sh ]; then
+    . $run_dir/config.sh
 fi
 
 # フォルダ作成
 
-mkdir -p $log_folder_name/successful
-mkdir -p $log_folder_name/failed
-mkdir -p $zip_folder_name
+mkdir -p $run_dir/$log_folder_name/successful
+mkdir -p $run_dir/$log_folder_name/failed
+mkdir -p $run_dir/$zip_folder_name
 
 # 定数定義
 
@@ -74,7 +78,7 @@ function color () {
 }
 
 function usage () {
-    echo -e "使用法: $0 [-d "dir"] [-r "device"] [-i "URI"] [-c] [-j thread] [-m] [-s] [-t] [-x] [-h]" $1
+    echo -e "使用法: sigure [-d "dir"] [-r "device"] [-i "URI"] [-c] [-j thread] [-m] [-s] [-t] [-x] [-h]" $1
     echo -e "-d: ソースディレクトリの位置" $1
     echo -e "-r: 実行するデバイスネーム" $1
     echo -e "-i: repo initを行う(オプション)" $1
@@ -126,7 +130,7 @@ fi
 if [ "$source_dir" = "" ]; then
     color $red "ディレクトリが指定されていません。" 1>&2
     finish="true"
-elif [ ! -d $source_dir ]; then
+elif [ ! -d $run_dir/$source_dir ]; then
     if [ "$repo_init_uri" = "" ]; then
         color $red "ディレクトリが存在していません。" 1>&2
         finish="true"
@@ -153,7 +157,7 @@ if [ "$screen_skip" != "true" ]; then
 
     # screenで再起動
     
-    screen $0 "$@" -x
+    screen sigure "$@" -x
     exit 0
 
 fi
@@ -171,8 +175,8 @@ if [ "$repo_init_uri" != "" ]; then
 
     # ディレクトリ作成 / 移動
 
-    mkdir -p $source_dir
-    cd $source_dir
+    mkdir -p $run_dir/$source_dir
+    cd $run_dir/$source_dir
 
     # ソース名取得
 
@@ -182,7 +186,7 @@ if [ "$repo_init_uri" != "" ]; then
     if [ "$source_name" = "" ]; then
         source_name=$source_dir
     fi
-    echo "source_name="$source_name > ./config.sh
+    echo "source_name="$source_name > $run_dir/$source_dir/config.sh
     color $green "ソース名 $source_name とセットされ設定が保存されました。"
 
     # ツイート
@@ -192,11 +196,11 @@ if [ "$repo_init_uri" != "" ]; then
     	start_init_time=$(date '+%m/%d %H:%M:%S')
         start_init_tweet="$source_name の repo init を行います。\n$start_init_time"
         
-        if [ -e ../config.sh ]; then
-            . ../config.sh
+        if [ -e $run_dir/config.sh ]; then
+            . $run_dir/config.sh
         fi
 
-        echo -e $start_init_tweet | python ../tweet.py
+        echo -e $start_init_tweet | python $script_dir/tweet.sh
   
     fi
 
@@ -213,11 +217,11 @@ if [ "$repo_init_uri" != "" ]; then
             stop_init_time=$(date '+%m/%d %H:%M:%S')
             stop_init_tweet="$source_name の repo init が異常終了しました。\n$stop_init_time"
 
-            if [ -e ../config.sh ]; then
-                . ../config.sh
+            if [ -e $run_dir/config.sh ]; then
+                . $run_dir/config.sh
             fi
 
-            echo -e $stop_init_tweet | python ../tweet.py
+            echo -e $stop_init_tweet | python $script_dir/tweet.sh
 
         fi
 
@@ -235,11 +239,11 @@ if [ "$repo_init_uri" != "" ]; then
             start_sync_time=$(date '+%m/%d %H:%M:%S')
             start_sync_tweet="$source_name の repo sync を開始します。\n$start_sync_time"
 
-            if [ -f ../config.sh ]; then
-                . ../config.sh
+            if [ -f $run_dir/config.sh ]; then
+                . $run_dir/config.sh
             fi
 
-            echo -e $start_sync_tweet | python ../tweet.py
+            echo -e $start_sync_tweet | python $script_dir/tweet.sh
         
         fi
 
@@ -256,17 +260,17 @@ if [ "$repo_init_uri" != "" ]; then
             stop_sync_tweet="$source_name の repo sync が異常終了しました。\n$end_sync_time"
             end_sync_tweet="$source_name の repo sync が正常終了しました。\n$end_sync_time"
 
-            if [ -f ../config.sh ]; then
-                . ../config.sh
+            if [ -f $run_dir/config.sh ]; then
+                . $run_dir/config.sh
             fi
 
             if [ $res_sync -eq 0 ]; then
 
-                echo -e $end_sync_tweet | python ../tweet.py
+                echo -e $end_sync_tweet | python $script_dir/tweet.sh
 
             else
 
-                echo -e $stop_sync_tweet | python ../tweet.py
+                echo -e $stop_sync_tweet | python $script_dir/tweet.sh
 
             fi
 
@@ -278,7 +282,7 @@ if [ "$repo_init_uri" != "" ]; then
 
 else
 
-    cd $source_dir
+    cd $run_dir/$source_dir
 
 fi
 
@@ -294,8 +298,8 @@ if [ "$repo_sync" = "true" ]; then
         source build/envsetup.sh >& /dev/null
         breakfast $target_device >& /dev/null
 
-        if [ -f ./config.sh ]; then
-            . ./config.sh
+        if [ -f $run_dir/$source_dir/config.sh ]; then
+            . $run_dir/$source_dir/config.sh
         fi
 
         # 変数初期値設定
@@ -303,11 +307,11 @@ if [ "$repo_sync" = "true" ]; then
         start_sync_time=$(date '+%m/%d %H:%M:%S')
         start_sync_tweet="$source_name の repo sync を開始します。\n$start_sync_time"
 
-        if [ -f ../config.sh ]; then
-            . ../config.sh
+        if [ -f $run_dir/config.sh ]; then
+            . $run_dir/config.sh
         fi
 
-        echo -e $start_sync_tweet | python ../tweet.py
+        echo -e $start_sync_tweet | python $script_dir/tweet.sh
         
     fi
 
@@ -323,8 +327,8 @@ if [ "$repo_sync" = "true" ]; then
 
         res_source=$?
 
-        if [ -f ./config.sh ]; then
-            . ./config.sh
+        if [ -f $run_dir/$source_dir/config.sh ]; then
+            . $run_dir/$source_dir/config.sh
         fi
 
         # 変数初期値設定
@@ -333,14 +337,14 @@ if [ "$repo_sync" = "true" ]; then
         stop_sync_tweet="$source_name の repo sync が異常終了しました。\n$end_sync_time"
         end_sync_tweet="$source_name の repo sync が正常終了しました。\n$end_sync_time"
 
-        if [ -f ../config.sh ]; then
-            . ../config.sh
+        if [ -f $run_dir/config.sh ]; then
+            . $run_dir/config.sh
         fi
 
         if [ $res_sync -eq 0 ]; then
-            echo -e $end_sync_tweet | python ../tweet.py
+            echo -e $end_sync_tweet | python $script_dir/tweet.sh
         else
-            echo -e $stop_sync_tweet | python ../tweet.py
+            echo -e $stop_sync_tweet | python $script_dir/tweet.sh
         fi
 
     fi
@@ -373,8 +377,8 @@ if [ "$tweet" = "true" ]; then
 
     model_name=$(get_build_var PRODUCT_MODEL)
 
-    if [ -f ./config.sh ]; then
-        . ./config.sh
+    if [ -f $run_dir/$source_dir/config.sh ]; then
+        . $run_dir/$source_dir/config.sh
     fi
 
 fi
@@ -402,11 +406,11 @@ if [ "$tweet" = "true" ]; then
     start_build_time=$(date '+%m/%d %H:%M:%S')
     start_build_tweet="$model_name 向け $source_name のビルドを開始します。\n$start_build_time"
 
-    if [ -f ../config.sh ]; then
-        . ../config.sh
+    if [ -f $run_dir/config.sh ]; then
+        . $run_dir/config.sh
     fi
     
-    echo -e $start_build_tweet | python ../tweet.py
+    echo -e $start_build_tweet | python $script_dir/tweet.sh
     
 fi
 
@@ -415,10 +419,10 @@ fi
 LANG=C
 if [ "$make_mode" = "true" ]; then
     color $blue "ビルドをmakeで開始します。"
-    make -j$pararell_jobs 2>&1 | tee "../$log_folder_name/$log_file_name.log"
+    make -j$pararell_jobs 2>&1 | tee "$run_dir/$log_folder_name/$log_file_name.log"
 else
     color $blue "ビルドをbrunchで開始します。"
-    brunch $target_device 2>&1 | tee "../$log_folder_name/$log_file_name.log"
+    brunch $target_device 2>&1 | tee "$run_dir/$log_folder_name/$log_file_name.log"
 fi
 
 res_build=${PIPESTATUS[0]}
@@ -426,14 +430,14 @@ res_build=${PIPESTATUS[0]}
 # ファイル移動
 if [ $res_build -eq 0 ]; then
     res_build_str=successful
-    mv --backup=t out/target/product/$target_device/$zip_name.zip ../$zip_folder_name
+    mv --backup=t $run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip $run_dir/$zip_folder_name
 else
     res_build_str=failed
 fi
 
-mv ../$log_folder_name/$log_file_name.log ../$log_folder_name/$res_build_str/$log_file_name.log
+mv $run_dir/$log_folder_name/$log_file_name.log $run_dir/$log_folder_name/$res_build_str/$log_file_name.log
 
-cd ..
+cd $run_dir
 
 # ツイート
 
@@ -441,7 +445,7 @@ if [ "$tweet" = "true" ]; then
 
     # 変数初期値設定
 
-    end_build_log=$(tail -2 "$log_folder_name/$res_build_str/$log_file_name.log" | head -1 | cut -d "#" -f 5 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
+    end_build_log=$(tail -2 "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log" | head -1 | cut -d "#" -f 5 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
     end_build_time=$(date '+%m/%d %H:%M:%S')
     if [ "$end_build_log" = "" ]; then
         stop_build_tweet="$model_name 向け $source_name のビルドが失敗しました。\n$end_build_time"
@@ -453,18 +457,18 @@ if [ "$tweet" = "true" ]; then
         end_build_zip_tweet="$zip_name のビルドが成功しました。\n$end_build_log\n$end_build_time"
     fi
     
-    if [ -f ./config.sh ]; then
-        . ./config.sh
+    if [ -f $run_dir/config.sh ]; then
+        . $run_dir/config.sh
     fi
     
     if [ $res_build -eq 0 ]; then
         if [ "$zip_name" != "*" ]; then
-            echo -e $end_build_zip_tweet | python tweet.py
+            echo -e $end_build_zip_tweet | python $script_dir/tweet.sh
         else
-            echo -e $end_build_tweet | python tweet.py
+            echo -e $end_build_tweet | python $script_dir/tweet.sh
         fi
     else
-        echo -e $stop_build_tweet | python tweet.py
+        echo -e $stop_build_tweet | python $script_dir/tweet.sh
     fi
     
 fi
