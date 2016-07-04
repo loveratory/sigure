@@ -431,12 +431,12 @@ res_build=${PIPESTATUS[0]}
 # ファイル移動
 if [ $res_build -eq 0 ]; then
     res_build_str=successful
-    mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip" "$run_dir/$zip_folder_name"
+    mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip" "$run_dir/$zip_folder_name/"
 else
     res_build_str=failed
 fi
 
-mv "$run_dir/$log_folder_name/logging/$log_filse_name.log" "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log"
+mv "$run_dir/$log_folder_name/logging/$log_file_name.log" "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log"
 
 cd $run_dir
 
