@@ -296,9 +296,6 @@ if [ "$repo_sync" = "true" ]; then
     # ツイート
     if [ "$tweet" = "true" ]; then
 
-        source build/envsetup.sh >& /dev/null
-        breakfast $target_device >& /dev/null
-
         if [ -f $run_dir/$source_dir/config.sh ]; then
             . $run_dir/$source_dir/config.sh
         fi
