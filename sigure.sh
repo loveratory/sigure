@@ -48,22 +48,9 @@ unset stop_build_tweet
 
 # 変数初期値設定
 
+pararell_jobs=4
 script_dir=$(dirname $(readlink -f $0))
 run_dir=$(pwd)
-pararell_jobs=4
-log_folder_name="logs"
-zip_folder_name="zips"
-
-if [ -f $run_dir/config.sh ]; then
-    . $run_dir/config.sh
-fi
-
-# フォルダ作成
-
-mkdir -p $run_dir/$log_folder_name/successful
-mkdir -p $run_dir/$log_folder_name/failed
-mkdir -p $run_dir/$log_folder_name/logging
-mkdir -p $run_dir/$zip_folder_name
 
 # 定数定義
 
@@ -162,8 +149,6 @@ if [ "$screen_skip" != "true" ]; then
     exit 0
 
 fi
-
-# 変数初期値設定
 
 if [ "$tweet" = "true" ]; then
     source_name=$source_dir
@@ -390,11 +375,6 @@ if [ "$make_clean" = "true" ]; then
 
 fi
 
-# 変数初期値設定
-
-log_file_time=$(date '+%Y-%m-%d_%H-%M-%S')
-log_file_name="${log_file_time}_${source_dir}_${target_device}"
-
 # ツイート
 
 if [ "$tweet" = "true" ]; then
@@ -412,6 +392,23 @@ if [ "$tweet" = "true" ]; then
     
 fi
 
+# 変数初期値設定
+
+log_file_time=$(date '+%Y-%m-%d_%H-%M-%S')
+log_file_name="${log_file_time}_${source_dir}_${target_device}"
+log_folder_name="logs"
+zip_folder_name="zips"
+
+if [ -f $run_dir/config.sh ]; then
+    . $run_dir/config.sh
+fi
+
+# フォルダ作成
+
+mkdir -p $run_dir/$log_folder_name/successful
+mkdir -p $run_dir/$log_folder_name/failed
+mkdir -p $run_dir/$log_folder_name/logging
+
 # ビルド
 
 LANG=C
@@ -427,6 +424,7 @@ res_build=${PIPESTATUS[0]}
 
 # ファイル移動
 if [ $res_build -eq 0 ]; then
+    mkdir -p $run_dir/$zip_folder_name
     res_build_str=successful
     mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip" "$run_dir/$zip_folder_name/"
 else
