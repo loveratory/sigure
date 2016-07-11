@@ -441,7 +441,7 @@ if [ "$tweet" = "true" ]; then
 
     # 変数初期値設定
 
-    end_build_log=$(tail -2 "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log" | head -1 | cut -d "#" -f 5 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | cut -c 2- | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
+    end_build_log=$(tail -2 "$run_dir/$log_folder_name/$res_build_str/$log_file_name.log" | head -1 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | ed 's/#//g' | sed 's/^[ ]*//g' | sed 's/ (hh:mm:ss)//g' | sed 's/ (mm:ss)//g' | sed 's/ seconds)/s/g' | sed 's/(//g' | sed 's/)//g' | sed 's/make failed to build some targets/make failed/g' | sed 's/make completed successfully/make successful/g')
     end_build_time=$(date '+%m/%d %H:%M:%S')
     if [ "$end_build_log" = "" ]; then
         stop_build_tweet="$model_name 向け $source_name のビルドが失敗しました。\n$end_build_time"
