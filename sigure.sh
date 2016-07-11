@@ -394,8 +394,8 @@ fi
 
 # 変数初期値設定
 
-log_file_time=$(date '+%Y-%m-%d_%H-%M-%S')
-log_file_name="${log_file_time}_${source_dir}_${target_device}"
+log_file_time=$(date '+%Y%m%d%H%M%S')
+log_file_name="${source_dir}_${target_device}_${log_file_time}"
 log_folder_name="logs"
 zip_folder_name="zips"
 
@@ -426,7 +426,7 @@ res_build=${PIPESTATUS[0]}
 if [ $res_build -eq 0 ]; then
     mkdir -p $run_dir/$zip_folder_name
     res_build_str=successful
-    mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/$zip_name.zip" "$run_dir/$zip_folder_name/"
+    mv --backup=t "$run_dir/$source_dir/out/target/product/$target_device/${zip_name}.zip" "$run_dir/$zip_folder_name/"
 else
     res_build_str=failed
 fi
