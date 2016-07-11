@@ -18,7 +18,7 @@ Ubuntu以外でもapt-getを適宜ディストリビューションに合わせ�
 cd ~/
 sudo apt install -y bash python python-pip screen
 sudo pip install requests_oauthlib
-git clone https://github.com/otofune/sigure
+git clone https://github.com/otofune/sigure -b develop
 ln -s ~/sigure/sigure.sh ~/bin/sigure
 ```
 
