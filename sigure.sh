@@ -19,6 +19,7 @@ unset screen_skip
 unset finish
 unset source_name
 unset model_name
+unset build_variant
 unset temp
 unset get_build_var_cm
 unset start_init_time
@@ -359,6 +360,7 @@ if [ "${tweet}" = "true" ]; then
     # 変数初期値設定
 
     model_name=$(get_build_var PRODUCT_MODEL)
+    build_variant=$(get_build_var TARGET_BUILD_VARIANT)
 
     if [ -f ${run_dir}/${source_dir}/config.sh ]; then
         . ${run_dir}/${source_dir}/config.sh
@@ -395,7 +397,7 @@ fi
 # 変数初期値設定
 
 log_file_time=$(date '+%Y%m%d%H%M%S')
-log_file_name="${source_dir}_${target_device}_${log_file_time}"
+log_file_name="${source_dir}_${target_device}-${build_variant}_${log_file_time}"
 log_folder_name="logs"
 zip_folder_name="zips"
 
@@ -426,7 +428,7 @@ res_build=${PIPESTATUS[0]}
 if [ ${res_build} -eq 0 ]; then
     mkdir -p ${run_dir}/${zip_folder_name}
     res_build_str=successful
-    mv --backup=t "${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.zip" "${run_dir}/${zip_folder_name}/"
+    mv --backup=t ${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.zip "${run_dir}/${zip_folder_name}/"
 else
     res_build_str=failed
 fi
