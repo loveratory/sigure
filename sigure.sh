@@ -430,8 +430,10 @@ if [ ${res_build} -eq 0 ]; then
     res_build_str=successful
     if [ ${zip_name} != "*" ]; then
         mv --backup=t "${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.zip" "${run_dir}/${zip_folder_name}/"
+        mv --backup=t "${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.md5sum" "${run_dir}/${zip_folder_name}/"
     else
         mv --backup=t ${run_dir}/${source_dir}/out/target/product/${target_device}/*.zip "${run_dir}/${zip_folder_name}/"
+        mv --backup=t ${run_dir}/${source_dir}/out/target/product/${target_device}/*.md5sum "${run_dir}/${zip_folder_name}/"
     fi
 else
     res_build_str=failed
