@@ -428,7 +428,7 @@ res_build=${PIPESTATUS[0]}
 if [ ${res_build} -eq 0 ]; then
     mkdir -p ${run_dir}/${zip_folder_name}
     res_build_str=successful
-    if [ ${zip_name} != "*" ]; then
+    if [ "${zip_name}" != "*" ]; then
         mv --backup=t "${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.zip" "${run_dir}/${zip_folder_name}/"
         mv --backup=t "${run_dir}/${source_dir}/out/target/product/${target_device}/${zip_name}.zip.md5sum" "${run_dir}/${zip_folder_name}/"
     else
