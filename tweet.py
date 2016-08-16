@@ -67,12 +67,13 @@ encordedSignature = urllib.quote_plus(signature)
 encordedNonce = urllib.quote_plus(nonce)
 encordedConsumerKey = urllib.quote_plus(config['consumerKey'])
 encordedAccessToken = urllib.quote_plus(config['accessToken'])
-encordedStatus = urllib.quote(status)
+encordedStatus = urllib.quote_plus(status)
+magickedEncordedStatus = encordedStatus.replace('+', '%20')
 authorization = 'OAuth oauth_consumer_key="' + encordedConsumerKey + '",oauth_nonce="' + encordedNonce + '",oauth_signature="' + encordedSignature + '",oauth_signature_method="HMAC-SHA1",oauth_timestamp="' + str(unixTime) + '",oauth_token="' + encordedAccessToken + '",oauth_version="1.0"'
 header = {
     'Authorization': authorization
 }
-param = 'status=' + encordedStatus
+param = 'status=' + magickedEncordedStatus
 request = urllib2.Request(requestUrl, param, header)
 try:
     result = urllib2.urlopen(request)
