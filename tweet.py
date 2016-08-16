@@ -14,9 +14,12 @@ import random
 # Status from Stdin
 status = sys.stdin.read()
 
+# Get own directory path
+path = os.path.dirname(os.path.abspath(__file__))
+
 # Load configuration
 try:
-    loadConfig = open('key.json', 'r')
+    loadConfig = open(path + '/key.json', 'r')
     config = json.load(loadConfig)
     loadConfig.close()
 except:
@@ -52,8 +55,10 @@ materialSignatureStrDic = {
 }
 sortedMaterialSignatureStrDic = sorted(materialSignatureStrDic.items(), key=lambda x: x[0])
 materialSignatureStr = urllib.urlencode(sortedMaterialSignatureStrDic)
+# + -> %20
+magickedMaterialSignatureStr = materialSignatureStr.replace('+', '%20')
 encordedUrl = urllib.quote_plus(requestUrl)
-encordedMaterialSignatureStr = urllib.quote_plus(materialSignatureStr)
+encordedMaterialSignatureStr = urllib.quote_plus(magickedMaterialSignatureStr)
 signatureStr = requestMethod + '&' + encordedUrl + '&' + encordedMaterialSignatureStr
 signature = base64.b64encode(hmac.new(signatureKey, signatureStr, hashlib.sha1).digest())
 
@@ -62,14 +67,12 @@ encordedSignature = urllib.quote_plus(signature)
 encordedNonce = urllib.quote_plus(nonce)
 encordedConsumerKey = urllib.quote_plus(config['consumerKey'])
 encordedAccessToken = urllib.quote_plus(config['accessToken'])
-encordedStatus = urllib.quote_plus(status)
+encordedStatus = urllib.quote(status)
 authorization = 'OAuth oauth_consumer_key="' + encordedConsumerKey + '",oauth_nonce="' + encordedNonce + '",oauth_signature="' + encordedSignature + '",oauth_signature_method="HMAC-SHA1",oauth_timestamp="' + str(unixTime) + '",oauth_token="' + encordedAccessToken + '",oauth_version="1.0"'
 header = {
     'Authorization': authorization
 }
-param = urllib.urlencode({
-    'status': status
-})
+param = 'status=' + encordedStatus
 request = urllib2.Request(requestUrl, param, header)
 try:
     result = urllib2.urlopen(request)
