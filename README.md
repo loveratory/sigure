@@ -6,9 +6,7 @@ repo init、repo sync、ビルドフレーバーとしてmake、brunchが可能�
 また、init時、init異常終了時、sync時、sync終了時、ビルド開始時、ビルド終了時にツイートを行えます。
 
 ## ライセンス
-パブリックドメイン、CC0とします。  
-![CC0](https://licensebuttons.net/l/zero/1.0/88x31.png "クリエイティブ・コモンズ・ライセンス")  
-[Creative Commons - CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
+パブリックドメインとして権利を放棄しています。[LICENSE](LICENSE)をご覧ください。
 
 ## 導入
 Androidビルド推奨環境であるUbuntu系列を想定しています。  
@@ -16,15 +14,23 @@ Ubuntu以外でもapt-getを適宜ディストリビューションに合わせ�
 
 ```
 cd ~/
-sudo apt install -y bash python python-pip screen
-sudo pip install requests_oauthlib
-git clone https://github.com/otofune/sigure -b develop
+sudo apt install -y bash python screen
+git clone https://github.com/otofune/sigure
 ln -s ~/sigure/sigure.sh ~/bin/sigure
 ```
 
 ## ツイートソフトウエアについて
-標準で使用されているtweet.pyの利用にはtweet.py内のCK,CS,AT,ASの編集が必要です。  
-CK,CS,AT,ASは[Twitter Application Management](https://apps.twitter.com/)にてアプリを作成後取得できます。  
+[otofune/tweetStdlibPy](https://github.com/otofune/tweetStdlibPy)を使用しています。  
+sigureを保存しているディレクトリ上のkey.jsonからAPIキーを読み取ります。  
+サンプル:  
+```
+{
+        "consumerKey": "xvz1evFS4wEEPTGEFPHBog",
+        "consumerSecret": "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
+        "accessToken": "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb",
+        "accessTokenSecret": "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"
+}
+```
 tweet.pyを利用しない場合はpython関連のソフトウエアを入れず、ラッパーであるtweet.shを編集することによってツイートに利用するソフトウエアを変更可能です。
 
 ## アップデート

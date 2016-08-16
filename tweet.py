@@ -1,30 +1,89 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import urllib
+import urllib2
+import json
+import os
 import sys
+import hashlib
+import hmac
+import base64
+import datetime
+import calendar
+import random
 
-from requests_oauthlib import OAuth1Session
+# Status from Stdin
+status = sys.stdin.read()
 
-CK = '' # Consumer Key
-CS = '' # Consumer Secret
-AT = '' # Access Token
-AS = '' # Accesss Token Secert
+# Load configuration
+try:
+    loadConfig = open('key.json', 'r')
+    config = json.load(loadConfig)
+    loadConfig.close()
+except:
+    print 'ERR: Invalid key.json'
+    sys.exit(1);
 
-# ツイート投稿用のURL
-url = "https://api.twitter.com/1.1/statuses/update.json"
+# Get UNIX Time
+unixTime = calendar.timegm(datetime.datetime.utcnow().timetuple())
 
-# ツイートする文字列の取得
-input = sys.stdin.read()
+# Method / URL
+requestMethod = 'POST'
+requestUrl = "https://api.twitter.com/1.1/statuses/update.json"
 
-# ツイート本文
-params = {"status": input}
+# Generate Nonce
+randomInt = random.randint(0, 10000000000000000)
+randomHash = hashlib.sha224(str(randomInt)).digest()
+nonce = base64.b64encode(randomHash)
 
-# OAuth認証で POST method で投稿
-twitter = OAuth1Session(CK, CS, AT, AS)
-req = twitter.post(url, params = params)
+# Generate Signature Key
+encordedConsumerSecret = urllib.quote_plus(config['consumerSecret'])
+encordedAccessTokenSecret = urllib.quote_plus(config['accessTokenSecret'])
+signatureKey = encordedConsumerSecret + '&' + encordedAccessTokenSecret
 
-# レスポンスを確認
-if req.status_code == 200:
-    print ("投稿成功です")
-else:
-    print ("投稿エラーです: %d" % req.status_code)
+# Generate Signature
+materialSignatureStrDic = {
+    'status' : status,
+    'oauth_signature_method': 'HMAC-SHA1',
+    'oauth_consumer_key': config['consumerKey'],
+    'oauth_nonce': nonce,
+    'oauth_timestamp': str(unixTime),
+    'oauth_token': config['accessToken'],
+    'oauth_version': '1.0'
+}
+sortedMaterialSignatureStrDic = sorted(materialSignatureStrDic.items(), key=lambda x: x[0])
+materialSignatureStr = urllib.urlencode(sortedMaterialSignatureStrDic)
+encordedUrl = urllib.quote_plus(requestUrl)
+encordedMaterialSignatureStr = urllib.quote_plus(materialSignatureStr)
+signatureStr = requestMethod + '&' + encordedUrl + '&' + encordedMaterialSignatureStr
+signature = base64.b64encode(hmac.new(signatureKey, signatureStr, hashlib.sha1).digest())
+
+# Send Request
+encordedSignature = urllib.quote_plus(signature)
+encordedNonce = urllib.quote_plus(nonce)
+encordedConsumerKey = urllib.quote_plus(config['consumerKey'])
+encordedAccessToken = urllib.quote_plus(config['accessToken'])
+encordedStatus = urllib.quote_plus(status)
+authorization = 'OAuth oauth_consumer_key="' + encordedConsumerKey + '",oauth_nonce="' + encordedNonce + '",oauth_signature="' + encordedSignature + '",oauth_signature_method="HMAC-SHA1",oauth_timestamp="' + str(unixTime) + '",oauth_token="' + encordedAccessToken + '",oauth_version="1.0"'
+header = {
+    'Authorization': authorization
+}
+param = urllib.urlencode({
+    'status': status
+})
+request = urllib2.Request(requestUrl, param, header)
+try:
+    result = urllib2.urlopen(request)
+except urllib2.HTTPError, e:
+    print 'Rejected: ' + str(e.code) + ' ' + e.reason
+    rawError = e.read()
+    try:
+        error = json.loads(rawError)
+        errorCode = error['errors'][0]['code']
+        errorMessage = error['errors'][0]['message']
+        print 'Error Code ' + str(errorCode) + ': ' + errorMessage
+    except:
+        print rawError
+    sys.exit(1)
+
+# Quit
+sys.exit()
