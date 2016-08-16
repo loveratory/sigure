@@ -10,7 +10,7 @@ repo init、repo sync、ビルドフレーバーとしてmake、brunchが可能�
 
 ## 導入
 Androidビルド推奨環境であるUbuntu系列を想定しています。  
-Ubuntu以外でもapt-getを適宜ディストリビューションに合わせれば利用可能かと思われます。  
+Ubuntu以外でもaptを適宜ディストリビューションに合わせれば利用可能かと思われます。  
 
 ```
 cd ~/
