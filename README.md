@@ -16,7 +16,23 @@ Ubuntu以外でもaptを適宜ディストリビューションに合わせれ�
 cd ~/
 sudo apt install -y bash python screen
 git clone https://github.com/otofune/sigure
+mkdir -p ~/bin
 ln -s ~/sigure/sigure.sh ~/bin/sigure
+```
+
+## アップデート
+
+```
+cd ~/sigure
+git pull
+```
+
+## PATHへの追加
+.bashrcに下記を追記:  
+```
+if [ -f ~/bin ]; then
+        export PATH=~/bin:$PATH
+fi
 ```
 
 ## ツイートソフトウエアについて
@@ -32,10 +48,3 @@ sigureを保存しているディレクトリ上のkey.jsonからAPIキーを読
 }
 ```
 tweet.pyを利用しない場合はpython関連のソフトウエアを入れず、ラッパーであるtweet.shを編集することによってツイートに利用するソフトウエアを変更可能です。
-
-## アップデート
-
-```
-cd ~/sigure
-git pull
-```
