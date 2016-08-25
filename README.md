@@ -30,8 +30,8 @@ git pull
 ## PATHへの追加
 .bashrcに下記を追記:  
 ```
-if [ -f ~/bin ]; then
-        export PATH=~/bin:$PATH
+if [ -d $HOME/bin ]; then
+        export PATH=$HOME/bin:$PATH
 fi
 ```
 
