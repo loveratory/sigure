@@ -36,7 +36,8 @@ fi
 ```
 
 ## ツイートソフトウエアについて
-[otofune/tweetStdlibPy](https://github.com/otofune/tweetStdlibPy)を使用しています。  
+[tweetStdlibPy2](https://github.com/otofune/tweetStdlibPy2)を使用しています。  
+これは、Python 2で動作するものです。  
 sigureを保存しているディレクトリ上のkey.jsonからAPIキーを読み取ります。  
 サンプル:  
 ```
