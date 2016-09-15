@@ -1,5 +1,4 @@
 #!/bin/bash
-
 function line () {
     echo $1 | grep '^[0-9]*$' >& /dev/null
     if [ $? -eq 0 ]; then
@@ -10,20 +9,31 @@ function line () {
             line="${line}-"
             i=`expr $i + 1`
         done
-        show " $line "
+        printf " $line \n"
     else
-        echo "invaild argument"
+        show "invaild argument"
     fi
 }
 
 function show () {
     if [ "$verbose" != true ]; then
-        printf "$1\n" $2
+        echo "$@"
     fi
 }
 
+function color() {
+    local red=31
+    local green=32
+    local yello=33
+    local blue=34
+    local color=$1
+    show -e "\033[${!color}m${2}\033[m" ${3}
+}
+
 function usage () {
-    show "usage: sigure [-h] [-v]" ${1}
+    show "usage: sigure [-h] [-v] [-x]" ${1}
     show "-h: show help" ${1}
     show "-v: verbose mode" ${1}
+    show "-x: direct start-up" ${1}
+    show -e "    do not use screen" ${1}
 }
