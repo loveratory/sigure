@@ -6,7 +6,7 @@ unset dir_run
 # assign paths
 scr_main=$(readlink -f $0)
 dir_src=${scr_main%/*}
-dir_run=$(pwd)
+dir_work=$(pwd)
 
 # import functions
 source "${dir_src}/function.sh"
@@ -15,19 +15,20 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts d:hmx argument
+while getopts d:hmux argument
 do
     case $argument in
         d) dir_tgt="$OPTARG" ;;
         h) usage
            exit 0 ;;
         m) mute=true ;;
+        u) git_update "${dir_src}" "${dir_work}";;
         x) direct=true ;;
     esac
 done
 
 # assign git information
-git "${dir_src}"
+git_info "${dir_src}"
 
 # welcome message
 show "Welcome to sigure! <${git_branch}>"
@@ -49,7 +50,7 @@ fi
 
 # kick-start build
 if [ "$direct" = true ]; then
-    bash "${dir_src}/build.sh" -d "${dir_tgt_full}" -x "${dir_src}"
+    bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
     exit $?
 else
     type screen >& /dev/null
@@ -58,6 +59,6 @@ else
         show "you don't need start with screen, use -x option." 1>&2
         exit 1
     fi
-    screen "${dir_src}/build.sh" -d "${dir_tgt_full}" -x "${dir_src}"
+    screen bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
     exit 0
 fi

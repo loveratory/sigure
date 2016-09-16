@@ -13,7 +13,7 @@ function line () {
             printf " $line \n"
         fi
     else
-        show "invaild argument"
+        show "invaild argument" 1>&2
     fi
 }
 
@@ -32,7 +32,7 @@ function color() {
     show -e "\033[${!color}m${2}\033[m" ${3}
 }
 
-function git () {
+function git_info () {
     if [ -d "$1/.git" ]; then
         git_ref=$(sed "s/.*: //g" "$1/.git/HEAD")
         git_branch=${git_ref##*/}
@@ -40,11 +40,40 @@ function git () {
     fi
 }
 
+function git_update () {
+    if [ -d "$1/.git" ]; then
+        color green "Welcome to sigure updator!"
+        line 26
+        git_info $1
+        local git_commit_older=${git_commit}
+        color green "start updating..."
+        cd $1
+        git pull >& /dev/null
+        if [ $? -ne 0 ]; then
+            color red "E: git update failed." 1>&2
+            cd $2
+            exit 1
+        fi
+        git info $1
+        if [ ${git_commit_older} != ${git_commit} ]; then
+            color green "I: update ${git_commit_older} to ${git_commit}"
+        else
+            color green "I: Already up-to-date."
+        fi
+        cd $2
+        exit 0
+    else
+        color red "E: not git directory." 1>&2
+        exit 0
+    fi
+}
+
 function usage () {
-    show "usage: sigure [-d dir] [-h] [-m] [-x]" ${1}
+    show "usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
     show "-d: target directory" ${1}
     show "-h: show help" ${1}
     show "-m: mute mode" ${1}
+    show "-u: git updator." ${1}
     show "-x: direct start-up" ${1}
     show -e "    do not use screen" ${1}
 }
