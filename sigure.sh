@@ -14,6 +14,19 @@ source "${dir_src}/function.sh"
 # reset variables
 source "${dir_src}/reset.sh"
 
+# process arguments
+while getopts :d:hmux argument
+do
+    case $argument in
+        d) dir_tgt="$OPTARG" ;;
+        h) help=true ;;
+        m) mute=true ;;
+        u) update=true ;;
+        x) direct=true ;;
+        \?) show_usage=true ;;
+    esac
+done
+
 # assign git information
 git_info "${dir_src}"
 
@@ -22,32 +35,29 @@ center "Welcome to sigure! <${git_branch}>" $len_line
 center "commit: ${git_commit}" $len_line
 line $len_line
 
-# process arguments
-while getopts :d:hmux argument
-do
-    case $argument in
-        d) dir_tgt="$OPTARG" ;;
-        h) usage
-           footer 0 ;;
-        m) mute=true ;;
-        u) git_update "${dir_src}" "${dir_work}"
-           footer $? ;;
-        x) direct=true ;;
-        \?) usage
-            footer 1;;
-    esac
-done
+# kick-start help
+
+if [ "$help" = true ]; then
+    usage
+    footer 0
+fi
+
+# kick-start updator
+if [ "$update" = true ]; then
+    git_update "${dir_src}" "${dir_work}"
+    footer $?
+fi
 
 # check whether the target directory exist
 if [ "${dir_tgt}" = "" ]; then
-    color red "E: target directory is unspecified." 1>&2
+    error "* E: target directory is unspecified."
     finish=true
 elif [ -d "${dir_run}/${dir_tgt}" ]; then
     dir_tgt_full="${dir_run}/${dir_tgt}"
 elif [ -d "${dir_tgt}" ]; then
     dir_tgt_full=$(readlink -f "${dir_tgt}")
 else
-    color red "E: target directory does not exist." 1>&2
+    error "* E: target directory does not exist."
     finish=true
 fi
 
@@ -63,8 +73,8 @@ if [ "$direct" = true ]; then
 else
     type screen >& /dev/null
     if [ $? -ne 0 ]; then
-        color red "E: screen not installed." 1>&2
-        show "you don't need start with screen, use -x option." 1>&2
+        error "* E: screen not installed."
+        show "* you don't need start with screen, use -x option." 1>&2
         footer 1
     fi
     screen bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"

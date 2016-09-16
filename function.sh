@@ -1,4 +1,3 @@
-#!/bin/bash
 # import readonly variables
 source "${dir_src}/readonly.sh"
 
@@ -41,7 +40,7 @@ function center () {
                 line="${line} "
                 i=`expr $i + 1`
             done
-            show $3 "${line}${string}${line}"
+            show "${line}${string}${line}"
         else
             show "invaild argument" 1>&2
         fi
@@ -57,6 +56,10 @@ function color() {
     local blue=34
     local color=$1
     show -e "\033[${!color}m${2}\033[m" ${3}
+}
+
+function error() {
+    echo -e "\033[31m${1}\033[m" 1>&2
 }
 
 function footer () {
@@ -75,38 +78,37 @@ function git_info () {
 
 function git_update () {
     if [ -d "$1/.git" ]; then
-        color green "Welcome to sigure updator!"
-        line 26
+        color green "* Welcome to sigure updator!"
         git_info $1
         local git_commit_older=${git_commit}
-        color green "start updating..."
+        color green "* start updating..."
         cd $1
         git pull >& /dev/null
         if [ $? -ne 0 ]; then
-            color red "E: git update failed." 1>&2
+            error "* E: git update failed."
             cd $2
             return 1
         fi
         git_info $1
         if [ "${git_commit_older}" != "${git_commit}" ]; then
-            color green "I: update ${git_commit_older} to ${git_commit}"
+            color green "* I: update ${git_commit_older} to ${git_commit}"
         else
-            color green "I: Already up-to-date."
+            color green "* I: Already up-to-date."
         fi
         cd $2
         return 0
     else
-        color red "E: not git directory." 1>&2
+        error "* E: not git directory."
         return 1
     fi
 }
 
 function usage () {
-    show "usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
-    show "-d: target directory" ${1}
-    show "-h: show help" ${1}
-    show "-m: mute mode" ${1}
-    show "-u: git updator" ${1}
-    show "-x: direct start-up" ${1}
-    show -e "    do not use screen" ${1}
+    show "* usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
+    show "* -d: target directory" ${1}
+    show "* -h: show help" ${1}
+    show "* -m: mute mode" ${1}
+    show "* -u: git updator" ${1}
+    show "* -x: direct start-up" ${1}
+    show -e "*     do not use screen" ${1}
 }
