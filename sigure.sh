@@ -15,7 +15,7 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hmux argument
+while getopts :d:hmtux argument
 do
     case $argument in
         d) dir_tgt="$OPTARG" ;;
@@ -36,7 +36,6 @@ center "commit: ${git_commit}" $len_line
 line $len_line
 
 # kick-start help
-
 if [ "$help" = true ]; then
     usage
     footer 0
@@ -61,14 +60,14 @@ else
     finish=true
 fi
 
-# can Finish
-if [ "$finish" != true ]; then
+# process finish
+if [ "$finish" = true ]; then
     footer 1
 fi
 
 # kick-start build
 if [ "$direct" = true ]; then
-    bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
+    bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer $?
 else
     type screen >& /dev/null
@@ -77,6 +76,6 @@ else
         show "* you don't need start with screen, use -x option." 1>&2
         footer 1
     fi
-    screen bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
+    screen "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
     footer 0
 fi

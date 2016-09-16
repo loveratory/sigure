@@ -104,11 +104,11 @@ function git_update () {
 }
 
 function usage () {
-    show "* usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
-    show "* -d: target directory" ${1}
-    show "* -h: show help" ${1}
-    show "* -m: mute mode" ${1}
-    show "* -u: git updator" ${1}
-    show "* -x: direct start-up" ${1}
-    show -e "*     do not use screen" ${1}
+    echo "* usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
+    echo "* -d: target directory" ${1}
+    echo "* -h: show help" ${1}
+    echo "* -m: mute mode" ${1}
+    echo "* -u: git updator" ${1}
+    echo "* -x: direct start-up" ${1}
+    echo -e "*     do not use screen" ${1}
 }
