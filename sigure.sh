@@ -23,7 +23,8 @@ do
         m) mute=true ;;
         u) update=true ;;
         x) direct=true ;;
-        \?) help=true ;;
+        :) continue ;;
+        \?) continue ;;
     esac
 done
 
@@ -76,6 +77,6 @@ else
         show "* you don't need start with screen, use -x option." 1>&2
         footer 1
     fi
-    screen "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
+    screen bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer 0
 fi
