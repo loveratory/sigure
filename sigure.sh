@@ -18,8 +18,8 @@ source "${dir_src}/reset.sh"
 git_info "${dir_src}"
 
 # welcome message
-center "Welcome to sigure! <${git_branch}>" 48
-show "commit: ${git_commit}"
+center "Welcome to sigure! <${git_branch}>" $len_line
+center "commit: ${git_commit}" $len_line
 line $len_line
 
 # process arguments
@@ -28,13 +28,13 @@ do
     case $argument in
         d) dir_tgt="$OPTARG" ;;
         h) usage
-           header 0 ;;
+           footer 0 ;;
         m) mute=true ;;
         u) git_update "${dir_src}" "${dir_work}"
-           header $? ;;
+           footer $? ;;
         x) direct=true ;;
         \?) usage
-            header 1;;
+            footer 1;;
     esac
 done
 
@@ -53,20 +53,20 @@ fi
 
 # can Finish
 if [ "$finish" != true ]; then
-    header 1
+    footer 1
 fi
 
 # kick-start build
 if [ "$direct" = true ]; then
     bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
-    header $?
+    footer $?
 else
     type screen >& /dev/null
     if [ $? -ne 0 ]; then
         color red "E: screen not installed." 1>&2
         show "you don't need start with screen, use -x option." 1>&2
-        header 1
+        footer 1
     fi
     screen bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
-    header 0
+    footer 0
 fi

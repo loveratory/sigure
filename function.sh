@@ -59,7 +59,7 @@ function color() {
     show -e "\033[${!color}m${2}\033[m" ${3}
 }
 
-function header () {
+function footer () {
     line $len_line
     center "Thanks for using sigure..." $len_line
     exit $1
@@ -106,7 +106,7 @@ function usage () {
     show "-d: target directory" ${1}
     show "-h: show help" ${1}
     show "-m: mute mode" ${1}
-    show "-u: git updator." ${1}
+    show "-u: git updator" ${1}
     show "-x: direct start-up" ${1}
     show -e "    do not use screen" ${1}
 }
