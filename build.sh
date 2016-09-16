@@ -4,7 +4,6 @@ do
     case $argument in
         d) dir_tgt_full="$OPTARG";;
         x) dir_src="$OPTARG";;
-        v) verbose="$OPTARG" ;;
     esac
 done
 
