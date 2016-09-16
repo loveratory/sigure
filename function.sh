@@ -52,7 +52,7 @@ function git_update () {
         if [ $? -ne 0 ]; then
             color red "E: git update failed." 1>&2
             cd $2
-            exit 1
+            return 1
         fi
         git info $1
         if [ ${git_commit_older} != ${git_commit} ]; then
@@ -61,10 +61,10 @@ function git_update () {
             color green "I: Already up-to-date."
         fi
         cd $2
-        exit 0
+        return 0
     else
         color red "E: not git directory." 1>&2
-        exit 0
+        return 1
     fi
 }
 

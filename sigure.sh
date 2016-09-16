@@ -22,7 +22,8 @@ do
         h) usage
            exit 0 ;;
         m) mute=true ;;
-        u) git_update "${dir_src}" "${dir_work}";;
+        u) git_update "${dir_src}" "${dir_work}"
+           exit $? ;;
         x) direct=true ;;
     esac
 done
