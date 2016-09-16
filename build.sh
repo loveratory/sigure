@@ -1,9 +1,10 @@
 #!/bin/bash
-while getopts d:x:v: argument
+while getopts :D:S:m argument
 do
     case $argument in
         D) dir_tgt_full="$OPTARG";;
-        x) dir_src="$OPTARG";;
+        S) dir_src="$OPTARG" ;;
+        m) mute=true ;;
     esac
 done
 

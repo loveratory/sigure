@@ -14,20 +14,6 @@ source "${dir_src}/function.sh"
 # reset variables
 source "${dir_src}/reset.sh"
 
-# process arguments
-while getopts d:hmux argument
-do
-    case $argument in
-        d) dir_tgt="$OPTARG" ;;
-        h) usage
-           exit 0 ;;
-        m) mute=true ;;
-        u) git_update "${dir_src}" "${dir_work}"
-           exit $? ;;
-        x) direct=true ;;
-    esac
-done
-
 # assign git information
 git_info "${dir_src}"
 
@@ -36,7 +22,23 @@ center "Welcome to sigure! <${git_branch}>" 48
 show "commit: ${git_commit}"
 line $len_line
 
-# check whether the target directory exits
+# process arguments
+while getopts :d:hmux argument
+do
+    case $argument in
+        d) dir_tgt="$OPTARG" ;;
+        h) usage
+           header 0 ;;
+        m) mute=true ;;
+        u) git_update "${dir_src}" "${dir_work}"
+           header $? ;;
+        x) direct=true ;;
+        \?) usage
+            header 1;;
+    esac
+done
+
+# check whether the target directory exist
 if [ "${dir_tgt}" = "" ]; then
     color red "E: target directory is unspecified." 1>&2
     finish=true
