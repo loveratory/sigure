@@ -61,7 +61,7 @@ function color() {
 
 function header () {
     line $len_line
-    center "(c) 2016- otofune" $len_line
+    center "Thanks for using sigure..." $len_line
     exit $1
 }
 
