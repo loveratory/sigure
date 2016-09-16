@@ -23,7 +23,7 @@ do
         m) mute=true ;;
         u) update=true ;;
         x) direct=true ;;
-        \?) show_usage=true ;;
+        \?) help=true ;;
     esac
 done
 
