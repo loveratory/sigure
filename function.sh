@@ -54,8 +54,8 @@ function git_update () {
             cd $2
             return 1
         fi
-        git info $1
-        if [ ${git_commit_older} != ${git_commit} ]; then
+        git_info $1
+        if [ "${git_commit_older}" != "${git_commit}" ]; then
             color green "I: update ${git_commit_older} to ${git_commit}"
         else
             color green "I: Already up-to-date."
