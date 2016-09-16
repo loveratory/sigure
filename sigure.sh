@@ -32,34 +32,39 @@ done
 git_info "${dir_src}"
 
 # welcome message
-show "Welcome to sigure! <${git_branch}>"
+center "Welcome to sigure! <${git_branch}>" 48
 show "commit: ${git_commit}"
-line 48
+line $len_line
 
 # check whether the target directory exits
 if [ "${dir_tgt}" = "" ]; then
     color red "E: target directory is unspecified." 1>&2
-    exit 1
+    finish=true
 elif [ -d "${dir_run}/${dir_tgt}" ]; then
     dir_tgt_full="${dir_run}/${dir_tgt}"
 elif [ -d "${dir_tgt}" ]; then
     dir_tgt_full=$(readlink -f "${dir_tgt}")
 else
     color red "E: target directory does not exist." 1>&2
-    exit 1
+    finish=true
+fi
+
+# can Finish
+if [ "$finish" != true ]; then
+    header 1
 fi
 
 # kick-start build
 if [ "$direct" = true ]; then
     bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
-    exit $?
+    header $?
 else
     type screen >& /dev/null
     if [ $? -ne 0 ]; then
         color red "E: screen not installed." 1>&2
         show "you don't need start with screen, use -x option." 1>&2
-        exit 1
+        header 1
     fi
     screen bash "${dir_src}/build.sh" "$@" -D "${dir_tgt_full}" -S "${dir_src}"
-    exit 0
+    header 0
 fi

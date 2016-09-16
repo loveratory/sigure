@@ -1,4 +1,7 @@
 #!/bin/bash
+# import readonly variables
+source "${dir_src}/readonly.sh"
+
 function line () {
     echo $1 | grep '^[0-9]*$' >& /dev/null
     if [ $? -eq 0 ]; then
@@ -23,6 +26,30 @@ function show () {
     fi
 }
 
+function center () {
+    echo $2 | grep '^[0-9]*$' >& /dev/null
+    if [ $? -eq 0 ]; then
+        local string=$1
+        local length=$2
+        local string_length=${#string}
+        if [ $string_length -lt $length ]; then
+            local blank=`expr \( $2 - $string_length \) / 2`
+            local line
+            local i=1
+            while [ $i -le $blank ]
+            do
+                line="${line} "
+                i=`expr $i + 1`
+            done
+            show $3 "${line}${string}${line}"
+        else
+            show "invaild argument" 1>&2
+        fi
+    else
+        show "invaild argument" 1>&2
+    fi
+}
+
 function color() {
     local red=31
     local green=32
@@ -30,6 +57,12 @@ function color() {
     local blue=34
     local color=$1
     show -e "\033[${!color}m${2}\033[m" ${3}
+}
+
+function header () {
+    line $len_line
+    center "(c) 2016- otofune" $len_line
+    exit $1
 }
 
 function git_info () {
