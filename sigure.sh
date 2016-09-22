@@ -133,6 +133,9 @@ else
     cd "$dir_work"
 fi
 
+# ALL CLEAR!
+color green "* congratulations! all testing passed!"
+
 # kick-start build
 if [ "$direct" = true ]; then
     show "* direct kick-start building..."
