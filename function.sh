@@ -1,5 +1,6 @@
 # import readonly variables
 source "${dir_src}/readonly.sh"
+source "${dir_src}/tweet.sh"
 
 function line () {
     echo $1 | grep '^[0-9]*$' >& /dev/null
@@ -125,7 +126,7 @@ function repo_sync() {
     local pararell=$2
     local source=$3
     cd $source
-    repo sync $URL -j $3
+    repo sync $URL -j $pararell
     local result=$?
     cd $work
     if [ $result -eq 127 ]; then
@@ -143,6 +144,18 @@ function check_numeric() {
         return 0
     fi
     return 1
+}
+
+function tweet() {
+    local base_string=$1
+    local time=`date '+%m\/%d %H:%M:%S'`
+    local string=$(echo $base_string | sed -i "s/%time/$time/g")
+    wrap_tweet "${string}"
+    if [ $? -ne 0 ]; then
+        error "E: tweet failed."
+        return 1
+    fi
+    return 0
 }
 
 function usage () {
