@@ -49,9 +49,9 @@ function wrap_tweet() {
         stdlib2_clone
     fi
     # check whether the tweetStdlibPy2 config exist
-    if [ ! -f "${dir_src}/tweetStdlibPy2/config.json" ]; then
+    if [ ! -f "${dir_src}/tweetStdlibPy2/key.json" ]; then
         show "* need configuration tweetStdlibPy2 for the first time only..."
-        stdlib2_config "${dir_src}/tweetStdlibPy2/config.json"
+        stdlib2_config "${dir_src}/tweetStdlibPy2/key.json"
     fi
 
     # tweet
