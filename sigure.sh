@@ -101,6 +101,9 @@ if [ "$repo_init" != "" ]; then
     fi
 fi
 
+# import source configuration
+load_config "${dir_work}" "${dir_tgt_full}"
+
 # kick-start repo sync
 if [ "$repo_sync" = true ]; then
     show "* kick-start repo sync..."
@@ -144,15 +147,15 @@ if [ "$direct" != true ]; then
 fi
 
 # ALL CLEAR!
-color green "* congratulations! all testing passed!"
+color green "* congratulations! all tests and pre-processes passed!"
 
 # kick-start build
 if [ "$direct" = true ]; then
     show "* direct kick-start building..."
-    bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
+    bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" -W "${dir_work}" "$@"
     footer $?
 else
     show "* kick-start building with screen..."
-    screen bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
+    screen bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" -W "${dir_work}" "$@"
     footer 0
 fi
