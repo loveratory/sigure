@@ -198,9 +198,10 @@ function load_config() {
 }
 
 function usage () {
-    echo -e "* usage: $0 \033[32m[-d device] [-s dir]\033[m [-h] [-i URL] [-j number] [-m] [-r] [-t] [-u] [-x]" ${1}
+    echo -e "* usage: $0 \033[32m[-d device] [-s dir]\033[m [-c] [-h] [-i URL] [-j number] [-m] [-r] [-t] [-u] [-x]" ${1}
     echo -e "* -d: target device \033[32m(required)\033[m" ${1}
     echo -e "* -s: target directory \033[32m(required)\033[m" ${1}
+    echo "* -c: make clean" ${1}
     echo "* -h: show help" ${1}
     echo "* -i: repo init" ${1}
     echo "      ex. $0"' -i "git://github.com/CyanogenMod/android.git -b cm-13.0"'
