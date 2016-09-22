@@ -18,7 +18,7 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hi:j:mrs:ux argument
+while getopts :d:hi:j:mrs:tux argument
 do
     case $argument in
         d) device="$OPTARG" ;;
@@ -30,6 +30,7 @@ do
         m) mute=true ;;
         r) repo_sync=true ;;
         s) dir_tgt="$OPTARG" ;;
+        t) tweet=true ;;
         u) update=true ;;
         x) direct=true ;;
         :) continue ;;
