@@ -15,13 +15,14 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hms:ux argument
+while getopts :d:hmrs:ux argument
 do
     case $argument in
         d) device="$OPTARG" ;;
         h) help=true ;;
         m) mute=true ;;
         s) dir_tgt="$OPTARG" ;;
+        r) repo_sync="$OPTARG" ;;
         u) update=true ;;
         x) direct=true ;;
         :) continue ;;
@@ -45,25 +46,26 @@ fi
 
 # kick-start updator
 if [ "$update" = true ]; then
-    git_update "${dir_src}" "${dir_work}"
+    git_update "$dir_src" "$dir_work"
     footer $?
 fi
 
 # check whether the target directory exist
-if [ "${dir_tgt}" = "" ]; then
+if [ "$dir_tgt" = "" ]; then
     error "* E: target directory is unspecified."
-    finish=true
+    footer 1
 elif [ -d "${dir_run}/${dir_tgt}" ]; then
     dir_tgt_full="${dir_run}/${dir_tgt}"
-elif [ -d "${dir_tgt}" ]; then
-    dir_tgt_full=$(readlink -f "${dir_tgt}")
+elif [ -d "$dir_tgt" ]; then
+    dir_tgt_full=$(readlink -f "$dir_tgt")
 else
     error "* E: target directory does not exist."
-    finish=true
+    footer 1
 fi
 
-# process finish
-if [ "$finish" = true ]; then
+# check whether the target device exist
+if [ "$device" = "" ]; then
+    error "* E: target device is unspecified."
     footer 1
 fi
 

@@ -60,6 +60,7 @@ function color() {
 
 function error() {
     echo -e "\033[31m${1}\033[m" 1>&2
+    color green "* I: want help, use -h option." 1>&2
 }
 
 function footer () {
