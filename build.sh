@@ -5,7 +5,7 @@ logs=logs
 zips=zips
 
 # process arguments
-while getopts :D:S:d:i:j:ms:t argument
+while getopts :D:S:W:d:i:j:ms:t argument
 do
     case $argument in
         D) dir_tgt_full="$OPTARG" ;;
