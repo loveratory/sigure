@@ -1,2 +1,2 @@
 #!/bin/bash
-readonly len_line=50
+readonly len_line=56

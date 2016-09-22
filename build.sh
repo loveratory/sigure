@@ -1,12 +1,18 @@
 #!/bin/bash
+# input default values
+jobs=4
+
 # process arguments
-while getopts :D:S:d:mt argument
+while getopts :D:S:d:i:j:ms:t argument
 do
     case $argument in
         D) dir_tgt_full="$OPTARG" ;;
         S) dir_src="$OPTARG" ;;
-        d) continue ;;
+        d) device="$OPTARG" ;;
+        i) continue ;;
+        j) jobs="$OPTARG" ;;
         m) mute=true ;;
+        s) continue ;;
         t) tweet=true ;;
         :) continue ;;
         \?) continue ;;
@@ -18,5 +24,5 @@ source "${dir_src}/function.sh"
 
 # kick-start tweet
 if [ "$tweet" = true ]; then
-    show "* do tweeting"
+    :
 fi

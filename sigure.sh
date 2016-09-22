@@ -8,6 +8,9 @@ scr_main=$(readlink -f $0)
 dir_src=${scr_main%/*}
 dir_work=$(pwd)
 
+# input default values
+jobs=4
+
 # import functions
 source "${dir_src}/function.sh"
 
@@ -15,14 +18,17 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hmrs:ux argument
+while getopts :d:hi:j:mrs:ux argument
 do
     case $argument in
         d) device="$OPTARG" ;;
         h) help=true ;;
+        i) repo_init="$OPTARG"
+           repo_sync=true ;;
+        j) jobs="$OPTARG" ;;
         m) mute=true ;;
+        r) repo_sync=true ;;
         s) dir_tgt="$OPTARG" ;;
-        r) repo_sync="$OPTARG" ;;
         u) update=true ;;
         x) direct=true ;;
         :) continue ;;
@@ -54,15 +60,53 @@ fi
 if [ "$dir_tgt" = "" ]; then
     error "* E: target directory is unspecified."
     footer 1
-elif [ -d "${dir_run}/${dir_tgt}" ]; then
-    dir_tgt_full="${dir_run}/${dir_tgt}"
-elif [ -d "$dir_tgt" ]; then
-    dir_tgt_full=$(readlink -f "$dir_tgt")
+fi
+if [ "$repo_init" = "" ]; then
+    if [ -d "${dir_run}/${dir_tgt}" ]; then
+        dir_tgt_full="${dir_run}/${dir_tgt}"
+    elif [ -d "$dir_tgt" ]; then
+        dir_tgt_full=$(readlink -f "$dir_tgt")
+    else
+        error "* E: target directory does not exist."
+        footer 1
+    fi
 else
-    error "* E: target directory does not exist."
+    echo $dir_tgt | grep "/" >& /dev/null
+    if [ $? -eq 0 ]; then
+        error "* E: source directory with repo init mode, need directory directly under."
+        footer 1
+    fi
+    dir_tgt_full="${dir_work}/${dir_tgt}"
+fi
+
+# check $jobs have number.
+if [ "$jobs" = "" ]; then
+    error "* E: invaild -j option argument."
+    footer 1
+fi
+check_numeric $jobs
+if [ $? -eq 1 ]; then
+    error "* E: invaild -j option argument."
     footer 1
 fi
 
+# kick-start repo init
+if [ "$repo_init" != "" ]; then
+    show "* kick-start repo init..."
+    repo_init "$dir_work" "$repo_init" "$dir_tgt_full"
+    if [ $? -ne 0 ]; then
+        footer 1
+    fi
+fi
+
+# kick-start repo sync
+if [ "$repo_sync" = true ]; then
+    show "* kick-start repo sync..."
+    repo_sync "$dir_work" "$jobs" "$dir_tgt_full"
+    if [ $? -ne 0 ]; then
+        footer 1
+    fi
+fi
 # check whether the target device exist
 if [ "$device" = "" ]; then
     error "* E: target device is unspecified."

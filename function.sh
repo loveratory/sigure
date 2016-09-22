@@ -104,15 +104,60 @@ function git_update () {
     fi
 }
 
+function repo_init() {
+    local work=$1
+    local URL=$2
+    local source=$3
+    mkdir -p $source
+    cd $source
+    repo init $URL
+    local result=$?
+    cd $work
+    if [ $result -eq 127 ]; then
+        error "* E: repo not installed."
+    elif [ $result -ne 0 ]; then
+        error "* E: repo init failed."
+    fi
+    return $result
+}
+
+function repo_sync() {
+    local work=$1
+    local pararell=$2
+    local source=$3
+    cd $source
+    repo sync $URL -j $3
+    local result=$?
+    cd $work
+    if [ $result -eq 127 ]; then
+        error "* E: repo not installed."
+    elif [ $result -ne 0 ]; then
+        error "* E: repo sync failed."
+    fi
+    return $result
+}
+
+function check_numeric() {
+    local check=$1
+    local except_numeric=`echo $check | sed 's/[0-9]//g'`
+    if [ "$except_numeric" = "" ]; then
+        return 0
+    fi
+    return 1
+}
+
 function usage () {
-    echo -e "* usage: $0 \033[32m[-d device] [-s dir]\033[m [-h] [-m] [-r] [-t] [-u] [-x]" ${1}
+    echo -e "* usage: $0 \033[32m[-d device] [-s dir]\033[m [-h] [-i URL] [-j number] [-m] [-r] [-t] [-u] [-x]" ${1}
     echo -e "* -d: target device \033[32m(required)\033[m" ${1}
     echo -e "* -s: target directory \033[32m(required)\033[m" ${1}
     echo "* -h: show help" ${1}
+    echo "* -i: repo init" ${1}
+    echo "      ex. $0"' -i "git://github.com/CyanogenMod/android.git -b cm-13.0"'
+    echo "* -j: job threads" ${1}
     echo "* -m: mute mode" ${1}
-    echo "* -r: repo sync mode" ${1}
+    echo "* -r: repo sync" ${1}
     echo "* -t: tweet mode" ${1}
     echo "* -u: sigure git updator" ${1}
     echo "* -x: direct start-up" ${1}
-    echo -e "      do not use screen" ${1}
+    echo "      do not use screen" ${1}
 }
