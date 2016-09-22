@@ -15,12 +15,13 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hmtux argument
+while getopts :d:hms:ux argument
 do
     case $argument in
-        d) dir_tgt="$OPTARG" ;;
+        d) device="$OPTARG" ;;
         h) help=true ;;
         m) mute=true ;;
+        s) dir_tgt="$OPTARG" ;;
         u) update=true ;;
         x) direct=true ;;
         :) continue ;;
@@ -68,6 +69,7 @@ fi
 
 # kick-start build
 if [ "$direct" = true ]; then
+    show "* direct kick-start building..."
     bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer $?
 else
@@ -77,6 +79,7 @@ else
         show "* you don't need start with screen, use -x option." 1>&2
         footer 1
     fi
+    show "* kick-start building with screen..."
     screen bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer 0
 fi

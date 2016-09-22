@@ -104,11 +104,14 @@ function git_update () {
 }
 
 function usage () {
-    echo "* usage: sigure [-d dir] [-h] [-m] [-u] [-x]" ${1}
-    echo "* -d: target directory" ${1}
+    echo -e "* usage: $0 \033[32m[-d device] [-s dir]\033[m [-h] [-m] [-r] [-t] [-u] [-x]" ${1}
+    echo -e "* -d: target device \033[32m(required)\033[m" ${1}
+    echo -e "* -s: target directory \033[32m(required)\033[m" ${1}
     echo "* -h: show help" ${1}
     echo "* -m: mute mode" ${1}
-    echo "* -u: git updator" ${1}
+    echo "* -r: repo sync mode" ${1}
+    echo "* -t: tweet mode" ${1}
+    echo "* -u: sigure git updator" ${1}
     echo "* -x: direct start-up" ${1}
-    echo -e "*     do not use screen" ${1}
+    echo -e "      do not use screen" ${1}
 }
