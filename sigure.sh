@@ -23,6 +23,7 @@ do
     case $argument in
         d) device="$OPTARG" ;;
         h) help=true ;;
+        c) clean=true ;;
         i) repo_init="$OPTARG"
            repo_sync=true ;;
         j) jobs="$OPTARG" ;;
@@ -92,23 +93,40 @@ if [ $? -eq 1 ]; then
     footer 1
 fi
 
+# import source configuration
+source=${dir_tgt_full##*/}
+load_config "${dir_work}" "${dir_tgt_full}"
+
 # kick-start repo init
 if [ "$repo_init" != "" ]; then
     show "* kick-start repo init..."
+    tweet "$init_start"
     repo_init "$dir_work" "$repo_init" "$dir_tgt_full"
     if [ $? -ne 0 ]; then
+        tweet "$init_stop"
         footer 1
     fi
 fi
 
-# import source configuration
-load_config "${dir_work}" "${dir_tgt_full}"
-
 # kick-start repo sync
 if [ "$repo_sync" = true ]; then
     show "* kick-start repo sync..."
+    tweet "$sync_start"
     repo_sync "$dir_work" "$jobs" "$dir_tgt_full"
     if [ $? -ne 0 ]; then
+        tweet "$sync_stop"
+        footer 1
+    fi
+    tweet "$sync_end"
+fi
+
+# kick-start make clean
+if [ "$clean" = true ]; then
+    show "* kick-start make clean..."
+    tweet "$clean_start"
+    make_clean "$dir_work" "$jobs" "$dir_tgt_full"
+    if [ $? -ne 0 ]; then
+        tweet "$clean_stop"
         footer 1
     fi
 fi

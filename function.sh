@@ -108,8 +108,20 @@ function repo_init() {
     local work=$1
     local URL=$2
     local source=$3
+    local raw
     mkdir -p $source
     cd $source
+    show -n "* please input init source name... >"
+    read raw
+    if [ "$raw" != "" ]; then
+        source=$raw
+        echo 'source="'"$source"'"' > "$source/config.sh"
+        if [ $? -ne 0 ]; then
+            error "* E: save failed."
+        else
+            show "* configuration saved."
+        fi
+    fi
     repo init $URL
     local result=$?
     cd $work
@@ -126,13 +138,27 @@ function repo_sync() {
     local pararell=$2
     local source=$3
     cd $source
-    repo sync $URL -j $pararell
+    repo sync --jobs $pararell --current-branch --force-broken --force-sync --no-clone-bundle
     local result=$?
     cd $work
     if [ $result -eq 127 ]; then
         error "* E: repo not installed."
     elif [ $result -ne 0 ]; then
         error "* E: repo sync failed."
+    fi
+    return $result
+}
+
+function make_clean() {
+    local work=$1
+    local pararell=$2
+    local source=$3
+    cd $source
+    make clean -j ${pararell}
+    local result=$?
+    cd $work
+    if [ $result -ne 0 ]; then
+        error "* E: make clean failed."
     fi
     return $result
 }
@@ -147,15 +173,28 @@ function check_numeric() {
 }
 
 function tweet() {
-    local base_string=$1
-    local time=`date '+%m\/%d %H:%M:%S'`
-    local string=$(echo $base_string | sed -i "s/%time/$time/g")
-    wrap_tweet "${string}"
-    if [ $? -ne 0 ]; then
-        error "E: tweet failed."
-        return 1
+    if [ "$tweet" = true ]; then
+        local base_string=$1
+        local time=`date '+%m\/%d %H:%M:%S'`
+        local string=$(echo $base_string | sed -i "s/%time/$time/g" | sed -i "s/%source/$source/g" | sed -i "s/%model/$model/g" | sed -i "s/%zip/$zip/g")
+        wrap_tweet "${string}"
+        if [ $? -ne 0 ]; then
+            error "E: tweet failed."
+            return 1
+        fi
+        return 0
     fi
-    return 0
+}
+
+function load_config() {
+    local work=$1
+    local source=$2
+    if [ -f "${work}/config.sh" ]; then
+        source "${work}/config.sh"
+    fi
+    if [ -f "${source}/config.sh" ]; then
+        source "${source}/config.sh"
+    fi
 }
 
 function usage () {
