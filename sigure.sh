@@ -57,6 +57,7 @@ if [ "$update" = true ]; then
 fi
 
 # check whether the target directory exist
+show "* check whether the target directory exist..."
 if [ "$dir_tgt" = "" ]; then
     error "* E: target directory is unspecified."
     footer 1
@@ -79,12 +80,13 @@ else
     dir_tgt_full="${dir_work}/${dir_tgt}"
 fi
 
-# check $jobs have number.
+# check $jobs is number.
+show '* check var $jobs is number...'
 if [ "$jobs" = "" ]; then
     error "* E: invaild -j option argument."
     footer 1
 fi
-check_numeric $jobs
+check_numeric "$jobs"
 if [ $? -eq 1 ]; then
     error "* E: invaild -j option argument."
     footer 1
@@ -107,10 +109,28 @@ if [ "$repo_sync" = true ]; then
         footer 1
     fi
 fi
+
+# check whether the source code prepared
+show "* check whether the source code prepared..."
+cd "$dir_tgt_full"
+source build/envsetup.sh >& /dev/null
+if [ $? -ne 0 ]; then
+    error "* E: source code is unprepared."
+    footer 1
+fi
+
 # check whether the target device exist
+show "* check whether the target device exist..."
 if [ "$device" = "" ]; then
     error "* E: target device is unspecified."
     footer 1
+else
+    breakfast "$device" >& /dev/null
+    if [ $? -ne 0 ]; then
+        error "* E: device tree is unprepared."
+        footer 1
+    fi
+    cd "$dir_work"
 fi
 
 # kick-start build
