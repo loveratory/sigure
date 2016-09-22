@@ -133,6 +133,16 @@ else
     cd "$dir_work"
 fi
 
+if [ "$direct" != true ]; then
+    show "* check whether the screen command exist..."
+    type screen >& /dev/null
+    if [ $? -ne 0 ]; then
+        error "* E: screen not installed."
+        show "* you don't need start with screen, use -x option." 1>&2
+        footer 1
+    fi
+fi
+
 # ALL CLEAR!
 color green "* congratulations! all testing passed!"
 
@@ -142,12 +152,6 @@ if [ "$direct" = true ]; then
     bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer $?
 else
-    type screen >& /dev/null
-    if [ $? -ne 0 ]; then
-        error "* E: screen not installed."
-        show "* you don't need start with screen, use -x option." 1>&2
-        footer 1
-    fi
     show "* kick-start building with screen..."
     screen bash "${dir_src}/build.sh" -D "${dir_tgt_full}" -S "${dir_src}" "$@"
     footer 0
