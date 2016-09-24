@@ -18,7 +18,7 @@ source "${dir_src}/function.sh"
 source "${dir_src}/reset.sh"
 
 # process arguments
-while getopts :d:hi:j:mrs:tux argument
+while getopts :cd:hi:j:mrs:tux argument
 do
     case $argument in
         d) device="$OPTARG" ;;
