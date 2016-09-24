@@ -111,18 +111,17 @@ function repo_init() {
     local raw
     mkdir -p $source
     cd $source
-    show -n "* please input init source name... >"
+    show -n "* please input init source name... > "
     read raw
     if [ "$raw" != "" ]; then
-        source=$raw
-        echo 'source="'"$source"'"' > "$source/config.sh"
+        echo 'source="'"$raw"'"' > "$source/config.sh"
         if [ $? -ne 0 ]; then
             error "* E: save failed."
         else
             show "* configuration saved."
         fi
     fi
-    repo init $URL
+    repo init -u $URL
     local result=$?
     cd $work
     if [ $result -eq 127 ]; then
