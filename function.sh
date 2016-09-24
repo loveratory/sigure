@@ -1,6 +1,6 @@
 # import readonly variables
 source "${dir_src}/readonly.sh"
-source "${dir_src}/tweet.sh"
+source "${dir_src}/wrap_tweet.sh"
 
 function line () {
     echo $1 | grep '^[0-9]*$' >& /dev/null
