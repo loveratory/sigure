@@ -49,7 +49,7 @@ mkdir -p "${dir_work}/${logs}/failed"
 log="${dir_tgt_cut}_${device}-${variant}_$(date '+%Y%m%d%-H%M%S')"
 color blue "* kick-start branch building..."
 LANG=C
-brunch ${device} 2>&1 | tee "${dir_work}/${logs}/logging/${log}"
+brunch ${device} 2>&1 | tee "${dir_work}/${logs}/logging/${log}.log"
 result=$?
 
 # move zip/md5sum
@@ -65,8 +65,8 @@ if [ $result -eq 0 ]; then
 fi
 
 # move logs
-filter = test $result -eq 0 && echo "successful" || echo "failed"
-mv "${dir_work}/${logs}/logging/${log}" "${dir_work}/${logs}/${filter}/${log}"
+filter=$(test $result -eq 0 && echo "successful" || echo "failed")
+mv "${dir_work}/${logs}/logging/${log}.log" "${dir_work}/${logs}/${filter}/${log}.log"
 
 # end tweets
 if [ $result -eq 0 && "$zip" != "" ]; then
