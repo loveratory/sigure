@@ -96,7 +96,7 @@ fi
 
 # import source configuration
 source=${dir_tgt_full##*/}
-load_config "${dir_work}" "${dir_tgt_full}"
+load_config "${dir_src}" "${dir_work}" "${dir_tgt_full}"
 
 # kick-start repo init
 if [ "$repo_init" != "" ]; then

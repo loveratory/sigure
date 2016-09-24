@@ -35,7 +35,7 @@ variant=$(get_build_var TARGET_BUILD_VARIANT)
 # import source configuration
 dir_tgt_cut=${dir_tgt_full##*/}
 source=$dir_tgt_cut
-load_config "${dir_work}" "${dir_tgt_full}"
+load_config "${dir_src}" "${dir_work}" "${dir_tgt_full}"
 
 # kick-start start tweet
 tweet "$build_start"
