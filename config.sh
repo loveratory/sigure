@@ -1,4 +1,4 @@
-hashtag="sigurebuild"
+hashtag="sigure"
 init_start="%source の repo init を行います。\n%time #$hashtag"
 init_stop="%source の repo init が異常終了しました。\n%time #$hashtag"
 sync_start="%source の repo sync を開始します。\n%time #$hashtag"
