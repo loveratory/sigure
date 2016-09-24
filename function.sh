@@ -107,14 +107,15 @@ function git_update () {
 function repo_init() {
     local work=$1
     local URL=$2
-    local source=$3
+    local target=$3
     local raw
-    mkdir -p $source
-    cd $source
+    mkdir -p $target
+    cd $target
     show -n "* please input init source name... > "
     read raw
     if [ "$raw" != "" ]; then
-        echo 'source="'"$raw"'"' > "$source/config.sh"
+        source=$raw
+        echo 'source="'"$source"'"' > "$target/config.sh"
         if [ $? -ne 0 ]; then
             error "* E: save failed."
         else
@@ -135,8 +136,8 @@ function repo_init() {
 function repo_sync() {
     local work=$1
     local pararell=$2
-    local source=$3
-    cd $source
+    local target=$3
+    cd $target
     repo sync --jobs $pararell --current-branch --force-broken --force-sync --no-clone-bundle
     local result=$?
     cd $work
@@ -151,8 +152,8 @@ function repo_sync() {
 function make_clean() {
     local work=$1
     local pararell=$2
-    local source=$3
-    cd $source
+    local target=$3
+    cd $target
     make clean -j ${pararell}
     local result=$?
     cd $work
@@ -187,7 +188,7 @@ function tweet() {
 
 function load_config() {
     local work=$1
-    local source=$2
+    local target=$2
     local sigure=$3
     if [ -f "${sigure}/config.sh" ]; then
         source "${sigure}/config.sh"
@@ -195,8 +196,8 @@ function load_config() {
     if [ -f "${work}/config.sh" ]; then
         source "${work}/config.sh"
     fi
-    if [ -f "${source}/config.sh" ]; then
-        source "${source}/config.sh"
+    if [ -f "${target}/config.sh" ]; then
+        source "${target}/config.sh"
     fi
 }
 
