@@ -26,22 +26,14 @@ function show () {
     fi
 }
 
-function center () {
+function space () {
     echo $2 | grep '^[0-9]*$' >& /dev/null
     if [ $? -eq 0 ]; then
         local string=$1
         local length=$2
         local string_length=${#string}
         if [ $string_length -lt $length ]; then
-            local blank=`expr \( $2 - $string_length \) / 2`
-            local line
-            local i=1
-            while [ $i -le $blank ]
-            do
-                line="${line} "
-                i=`expr $i + 1`
-            done
-            show "${line}${string}${line}"
+            show "  ${string}"
         else
             show "invaild argument" 1>&2
         fi
@@ -65,7 +57,7 @@ function error() {
 
 function footer () {
     line $len_line
-    center "Thanks for using sigure..." $len_line
+    space "Thanks for using sigure..." $len_line
     exit $1
 }
 

@@ -42,8 +42,8 @@ done
 git_info "${dir_src}"
 
 # welcome message
-center "Welcome to sigure! <${git_branch}>" $len_line
-center "commit: ${git_commit}" $len_line
+space "Welcome to sigure! <${git_branch}>" $len_line
+space "commit: ${git_commit}" $len_line
 line $len_line
 
 # kick-start help
