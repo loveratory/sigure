@@ -50,7 +50,7 @@ log="${dir_tgt_cut}_${device}-${variant}_$(date '+%Y%m%d%-H%M%S')"
 color blue "* kick-start branch building..."
 LANG=C
 brunch ${device} 2>&1 | tee "${dir_work}/${logs}/logging/${log}.log"
-result=$?
+result=${PIPESTATUS[0]}
 
 # move zip/md5sum
 if [ $result -eq 0 ]; then
