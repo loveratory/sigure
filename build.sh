@@ -69,9 +69,9 @@ filter=$(test $result -eq 0 && echo "successful" || echo "failed")
 mv "${dir_work}/${logs}/logging/${log}.log" "${dir_work}/${logs}/${filter}/${log}.log"
 
 # end tweets
-if [ $result -eq 0 && "$zip" != "" ]; then
+if [ $result -eq 0 -a "$zip" != "" ]; then
     tweet "$build_end_zip"
-elif [ $result -eq 0 && "$zip" = "" ]; then
+elif [ $result -eq 0 -a "$zip" = "" ]; then
     tweet "$build_stop"
 else
     tweet "$build_end"
