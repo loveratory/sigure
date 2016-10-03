@@ -72,7 +72,7 @@ mv "${dir_work}/${logs}/logging/${log}.log" "${dir_work}/${logs}/${filter}/${log
 if [ $result -eq 0 -a "$zip" != "" ]; then
     tweet "$build_end_zip"
 elif [ $result -eq 0 -a "$zip" = "" ]; then
-    tweet "$build_stop"
-else
     tweet "$build_end"
+else
+    tweet "$build_stop"
 fi
