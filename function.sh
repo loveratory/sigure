@@ -179,9 +179,9 @@ function tweet() {
 }
 
 function load_config() {
-    local work=$1
-    local target=$2
-    local sigure=$3
+    local sigure=$1
+    local work=$2
+    local target=$3
     if [ -f "${sigure}/config.sh" ]; then
         source "${sigure}/config.sh"
     fi
