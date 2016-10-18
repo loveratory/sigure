@@ -168,7 +168,7 @@ function tweet() {
     if [ "$tweet" = true ]; then
         local base_string=$1
         local time=`date '+%m\/%d %H:%M:%S'`
-        local string=$(echo $base_string | sed -e "s/%time/$time/g" -e "s/%source/$source/g" -e "s/%model/$model/g" -e "s/%zip/$zip/g" -e "s/%hashtag/$hashtag/g")
+        local string=$(echo $base_string | sed -e "s/%time/$time/g" -e "s/%source/$source/g" -e "s/%model/$model/g" -e "s/%zip/$zip/g" -e "s/%hashtag/$hashtag/g" -e "s/%lastlog/$lastlog/g")
         wrap_tweet "${string}"
         if [ $? -ne 0 ]; then
             error "E: tweet failed."

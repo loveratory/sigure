@@ -68,6 +68,9 @@ fi
 filter=$(test $result -eq 0 && echo "successful" || echo "failed")
 mv "${dir_work}/${logs}/logging/${log}.log" "${dir_work}/${logs}/${filter}/${log}.log"
 
+# catch lastlog
+lastlog=$(tail -2 "${dir_work}/${logs}/${filter}/${log}.log" | head -1 | sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' -e 's/#//g' -e 's/^[ ]*//g' -e 's/ (hh:mm:ss)//g' -e 's/ (mm:ss)//g' -e 's/ seconds)/s/g' -e 's/(//g' -e 's/)//g' -e 's/make failed to build some targets/make failed/g' -e 's/make completed successfully/make successful/g')
+
 # end tweets
 if [ $result -eq 0 -a "$zip" != "" ]; then
     tweet "$build_end_zip"
