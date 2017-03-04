@@ -1,6 +1,6 @@
 #!/bin/bash
 function stdlib2_clone () {
-    git clone https://github.com/otofune/tweetStdlibPy2.git "${dir_src}/tweetStdlibPy2"
+    git clone https://github.com/BindEmotions/tweetStdlibPy2.git "${dir_src}/tweetStdlibPy2"
     if [ $? -ne 0 ]; then
         error "* E: clone failed."
         return 1
