@@ -4,7 +4,7 @@ cyanogenmod build shell helper.
 
 Setup
 ----------
-1. `git clone https://github.com/otofune/sigure ~/sigure/`
+1. `git clone https://github.com/BindEmotions/sigure ~/sigure/`
 2. `mkdir -p ~/bin`
 3. `ln -s ~/sigure/sigure.sh ~/bin/sigure`
 4. add below to .bashrc
